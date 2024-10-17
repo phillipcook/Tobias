@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spelling Test for Kids</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .controls, .test-area, .results {
+            width: 100%;
+            max-width: 800px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls label {
+            margin: 5px 0;
+        }
+
+        .controls input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .checkbox-group label {
+            margin: 5px 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        #startTest {
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        #startTest:hover {
+            background-color: #0d6efd;
+        }
+
+        .test-area.hidden, .results.hidden {
+            display: none;
+        }
+
+        #wordDisplay {
+            font-size: 2.5em;
+            margin: 20px 0;
+            text-align: center;
+            color: #333;
+        }
+
+        #countdown {
+            font-size: 2em;
+            color: #1e90ff;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 1s ease;
+        }
+
+        #inputArea {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #inputWord {
+            font-size: 1.2em;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border: 2px solid #1e90ff;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #inputWord:focus {
+            border-color: #0d6efd;
+        }
+
+        #results table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #results th, #results td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #results th {
+            background-color: #1e90ff;
+            color: white;
+        }
+
+        #results tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #results tr.correct {
+            background-color: #d4edda;
+        }
+
+        #results tr.incorrect {
+            background-color: #f8d7da;
+        }
+
+        #resultsCaption {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        @media (max-width: 800px) {
+            .controls, .test-area, .results {
+                padding: 15px;
+            }
+
+            #wordDisplay {
+                font-size: 2em;
+            }
+
+            #countdown {
+                font-size: 1.5em;
+            }
+
+            #inputWord {
+                width: 100%;
+                max-width: none;
+            }
+
+            .checkbox-group label {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Spelling Test</h1>
+
+    <div class="controls">
+        <div>
+            <label for="numWords">Number of Words:</label>
+            <input type="number" id="numWords" name="numWords" min="1" max="200" value="10">
+        </div>
+
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="twoLetter" checked> 2-letter words</label>
+            <label><input type="checkbox" id="threeLetter" checked> 3-letter words</label>
+            <label><input type="checkbox" id="fourLetter" checked> 4-letter words</label>
+            <label><input type="checkbox" id="fiveLetter" checked> 5-letter words</label>
+            <label><input type="checkbox" id="sixLetter" checked> 6-letter words</label>
+            <label><input type="checkbox" id="sevenLetter" checked> 7-letter words</label>
+            <label><input type="checkbox" id="eightLetter" checked> 8-letter words</label>
+            <label><input type="checkbox" id="nineLetter" checked> 9-letter words</label>
+            <label><input type="checkbox" id="tenLetter" checked> 10-letter words</label>
+        </div>
+
+        <button id="startTest">Start Test</button>
+    </div>
+
+    <div class="test-area hidden" id="testArea">
+        <div id="countdown">3</div>
+        <div id="wordDisplay"></div>
+        <div id="inputArea">
+            <input type="text" id="inputWord" autocomplete="off" placeholder="Type the word here">
+        </div>
+    </div>
+
+    <div class="results hidden" id="results">
+        <h2 id="resultsCaption">Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Word</th>
+                    <th>Your Answer</th>
+                    <th>Definition</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody id="resultsList"></tbody>
+        </table>
+    </div>
+
+<script>
+    // Common Two-Letter Words with Definitions for Young Children
+    const twoLetterWords = [
+        { word: "an", definition: "Used before words like 'apple' to mean one." },
+        { word: "as", definition: "Used to show how much, like 'as big as a bear'." },
+        { word: "at", definition: "Shows where something is, like 'at home'." },
+        { word: "be", definition: "Means to exist, like 'I want to be happy.'" },
+        { word: "by", definition: "Shows how something is done, like 'travel by car.'" },
+        { word: "do", definition: "Means to perform an action, like 'do your homework.'" },
+        { word: "go", definition: "To move to another place, like 'go to the park.'" },
+        { word: "he", definition: "Talks about a boy or man, like 'He is my friend.'" },
+        { word: "if", definition: "Shows a possibility, like 'If it rains, we stay inside.'" },
+        { word: "in", definition: "Means inside something, like 'in the box.'" },
+        { word: "is", definition: "Shows something exists, like 'She is happy.'" },
+        { word: "it", definition: "Talks about a thing, like 'It is a cat.'" },
+        { word: "me", definition: "Talks about yourself, like 'Give it to me.'" },
+        { word: "my", definition: "Shows something belongs to you, like 'my toy.'" },
+        { word: "no", definition: "Means something is not allowed, like 'No running.'" },
+        { word: "on", definition: "Means on top of something, like 'on the table.'" },
+        { word: "or", definition: "Shows a choice, like 'Juice or milk?'" },
+        { word: "so", definition: "Shows how something is, like 'I am so happy!'" },
+        { word: "to", definition: "Shows direction, like 'go to school.'" },
+        { word: "up", definition: "Means moving higher, like 'climb up.'" },
+        { word: "us", definition: "Means you and me together, like 'Come with us.'" },
+        { word: "we", definition: "Talks about a group including you, like 'We are friends.'" },
+        { word: "am", definition: "Means 'I am', like 'I am happy.'" },
+        { word: "aw", definition: "A sound when something is cute, like 'Aw, a puppy!'" },
+        { word: "hi", definition: "A way to say hello, like 'Hi, friend!'" },
+        { word: "ma", definition: "Another word for 'mom', like 'Ma is cooking.'" },
+        { word: "oh", definition: "A sound when surprised, like 'Oh!'" },
+        { word: "pa", definition: "Another word for 'dad', like 'Pa is reading.'" },
+        { word: "pi", definition: "A number like 3.14, used in math." },
+        { word: "sh", definition: "A sound to be quiet, like 'Shh, be quiet.'" },
+        { word: "ya", definition: "A casual way to say 'you,' like 'Ya ready?'" },
+        { word: "yo", definition: "A fun way to say 'hello,' like 'Yo, what's up?'" },
+    ];
+
+
+
+    // Common Three-Letter Words with Definitions for Young Children
+    const threeLetterWords = [
+        { word: "and", definition: "Used to join words or groups together, like 'apples and oranges'." },
+        { word: "cat", definition: "A small, furry animal that says 'meow'." },
+        { word: "dog", definition: "A friendly animal that says 'woof'." },
+        { word: "sun", definition: "The bright star that shines in the sky during the day." },
+        { word: "bed", definition: "A place where you sleep and rest." },
+        { word: "car", definition: "A vehicle with four wheels that takes you places." },
+        { word: "cup", definition: "A small container you drink from." },
+        { word: "hat", definition: "Something you wear on your head." },
+        { word: "pig", definition: "A pink animal that likes to play in the mud." },
+        { word: "toy", definition: "An object you play with." },
+        { word: "boy", definition: "A young male child." },
+        { word: "girl", definition: "A young female child." },
+        { word: "egg", definition: "What birds lay and chickens lay eggs for." },
+        { word: "fly", definition: "To move through the air." },
+        { word: "hat", definition: "Something you wear on your head to keep warm or for fun." },
+        { word: "ice", definition: "Frozen water, very cold." },
+        { word: "jar", definition: "A container with a lid to hold things." },
+        { word: "key", definition: "Something you use to open doors." },
+        { word: "leg", definition: "A part of your body that helps you stand and walk." },
+        { word: "man", definition: "An adult male person." },
+        { word: "nap", definition: "A short sleep during the day." },
+        { word: "owl", definition: "A bird that is awake at night and says 'hoo hoo'." },
+        { word: "pen", definition: "A tool you use to write or draw." },
+        { word: "rat", definition: "A small, quick animal with a long tail." },
+        { word: "sun", definition: "The big bright thing in the sky that gives us light." },
+        { word: "toy", definition: "Something fun to play with, like a doll or a car." },
+        { word: "van", definition: "A type of vehicle used to carry people or things." },
+        { word: "wig", definition: "A hairpiece people wear on their heads." },
+        { word: "yak", definition: "A furry animal with horns, found in cold places." },
+        { word: "zip", definition: "A fast way to close something, like on a jacket." },
+        { word: "bed", definition: "A comfy place to sleep." },
+        { word: "bus", definition: "A big vehicle that takes many people places." },
+        { word: "cap", definition: "A type of hat." },
+        { word: "dot", definition: "A small round mark." },
+        { word: "fig", definition: "A sweet fruit that grows on trees." },
+        { word: "gum", definition: "Something you chew that is tasty." },
+        { word: "hen", definition: "A female chicken." },
+        { word: "ink", definition: "The colored liquid used in pens." },
+        { word: "jam", definition: "A sweet spread made from fruit." },
+        { word: "kit", definition: "A set of tools or parts needed for something." },
+        { word: "lid", definition: "A cover for a container." },
+        { word: "mud", definition: "Wet dirt, good for playing." },
+        { word: "net", definition: "A tool used to catch things, like fish." },
+        { word: "owl", definition: "A wise bird that flies at night." },
+        { word: "pie", definition: "A yummy dessert with fruit or filling." },
+        { word: "rat", definition: "A small animal that likes to nibble." },
+    ];
+
+
+
+    const fourLetterWords = [
+        { word: "ball", definition: "A round object used in games and sports." },
+        { word: "book", definition: "A set of pages with stories or information." },
+        { word: "cake", definition: "A sweet baked treat made with flour and sugar." },
+        { word: "door", definition: "A thing that opens and closes to enter or leave a room." },
+        { word: "fish", definition: "A water animal that swims and has fins." },
+        { word: "game", definition: "Something fun you play with friends or family." },
+        { word: "hand", definition: "The part of your body at the end of your arm." },
+        { word: "jump", definition: "To push yourself off the ground and into the air." },
+        { word: "kite", definition: "A toy that flies in the sky when you run with it." },
+        { word: "lion", definition: "A big, strong cat that lives in the wild." },
+        { word: "moon", definition: "The bright object in the night sky that shines with light." },
+        { word: "milk", definition: "A white drink that comes from cows." },
+        { word: "nest", definition: "A home built by birds to lay their eggs." },
+        { word: "park", definition: "A place with grass and trees where you can play." },
+        { word: "rain", definition: "Water that falls from the sky." },
+        { word: "ship", definition: "A big boat that travels on water." },
+        { word: "star", definition: "A bright thing in the night sky." },
+        { word: "tree", definition: "A tall plant with a trunk and branches." },
+        { word: "walk", definition: "To move by putting one foot in front of the other." },
+        { word: "wolf", definition: "A wild animal that looks like a big dog." },
+        { word: "zoo", definition: "A place where you can see many different animals." },
+        { word: "frog", definition: "A small green animal that hops and lives near water." },
+        { word: "lamp", definition: "A thing that gives light in a room." },
+        { word: "bear", definition: "A big furry animal that lives in forests." },
+        { word: "bird", definition: "An animal with wings that can fly." },
+        { word: "boat", definition: "A small vessel for traveling on water." },
+        { word: "coat", definition: "A warm piece of clothing you wear outside." },
+        { word: "feet", definition: "The parts of your body you stand and walk on." },
+        { word: "gift", definition: "Something you give to someone to make them happy." },
+        { word: "hair", definition: "The strands that grow on your head." },
+        { word: "nose", definition: "The part of your face you smell with." },
+        { word: "palm", definition: "The inside part of your hand." },
+        { word: "sand", definition: "Small grains found on beaches and deserts." },
+        { word: "sock", definition: "A piece of clothing you wear on your feet." },
+        { word: "tail", definition: "The part that sticks out from the back of some animals." },
+        { word: "wave", definition: "A movement of water or a hand gesture to say hello." },
+        { word: "yard", definition: "An area outside your house." },
+        { word: "zero", definition: "The number 0, meaning nothing." },
+        { word: "zone", definition: "An area or region marked for a specific purpose." },
+        { word: "leaf", definition: "The green part of a plant that grows from the stem." },
+        { word: "door", definition: "A thing that opens and closes to enter or leave a room." },
+        { word: "glow", definition: "A steady light that shines softly." },
+        { word: "hill", definition: "A small mountain or elevated area of land." },
+        { word: "jazz", definition: "A type of lively music with lots of instruments." },
+        { word: "king", definition: "A male ruler of a country." },
+        { word: "lamp", definition: "A device that provides light." },
+        { word: "mint", definition: "A plant with a fresh smell, or a place where coins are made." },
+        { word: "nest", definition: "A home built by birds to lay their eggs." },
+        { word: "pear", definition: "A sweet fruit that is juicy and grows on trees." },
+        { word: "quiz", definition: "A short test to see what you know." },
+        { word: "rose", definition: "A beautiful flower that comes in many colors." },
+        { word: "snow", definition: "Frozen water that falls from the sky in cold weather." },
+        { word: "twig", definition: "A small branch from a tree." },
+        { word: "vase", definition: "A container for holding flowers." },
+        { word: "wolf", definition: "A wild animal that looks like a big dog." },
+        { word: "yarn", definition: "Thread used for knitting or making things." },
+        { word: "zinc", definition: "A shiny metal used to make things." },
+        // Add more four-letter words with definitions here
+    ];
+
+
+
+    const fiveLetterWords = [
+        { word: "apple", definition: "A sweet red or green fruit that grows on trees." },
+        { word: "bread", definition: "A yummy food made from flour and baked." },
+        { word: "chair", definition: "A seat with a back where you can sit." },
+        { word: "dream", definition: "Thoughts or pictures you see when you sleep." },
+        { word: "eagle", definition: "A big bird that can fly very high." },
+        { word: "fruit", definition: "Sweet parts of plants that you can eat." },
+        { word: "grape", definition: "A small, round fruit that can be green or purple." },
+        { word: "house", definition: "A building where people live." },
+        { word: "image", definition: "A picture or something you can see." },
+        { word: "juice", definition: "A tasty drink made from fruits or vegetables." },
+        { word: "kitty", definition: "A cute, small cat." },
+        { word: "lemon", definition: "A sour yellow fruit." },
+        { word: "melon", definition: "A big, juicy fruit like watermelon." },
+        { word: "night", definition: "The time when it's dark outside and you sleep." },
+        { word: "ocean", definition: "A large body of salty water." },
+        { word: "party", definition: "A fun gathering with friends and family." },
+        { word: "queen", definition: "A female ruler or a royal lady." },
+        { word: "robot", definition: "A machine that can do tasks." },
+        { word: "snake", definition: "A long, slithery animal without legs." },
+        { word: "tiger", definition: "A big, striped wild cat." },
+        { word: "umbra", definition: "A shadow or dark area." },
+        { word: "vocal", definition: "Using your voice to sing or speak." },
+        { word: "whale", definition: "A huge animal that lives in the ocean." },
+        { word: "yacht", definition: "A fancy boat used for fun." },
+        { word: "zebra", definition: "A horse with black and white stripes." },
+        { word: "angel", definition: "A kind and pure being, often seen in stories." },
+        { word: "brick", definition: "A hard block used to build houses." },
+        { word: "candy", definition: "Sweet treats that taste yummy." },
+        { word: "daisy", definition: "A small, white flower with a yellow center." },
+        { word: "earth", definition: "The planet we live on." },
+        { word: "flute", definition: "A musical instrument you blow into." },
+        { word: "glove", definition: "Clothing you wear on your hands." },
+        { word: "heart", definition: "The organ that pumps blood in your body." },
+        { word: "jelly", definition: "A sweet spread made from fruit." },
+        { word: "knife", definition: "A tool with a sharp edge for cutting." },
+        { word: "mouse", definition: "A small animal that likes cheese." },
+        { word: "noise", definition: "Sounds that can be loud or soft." },
+        { word: "olive", definition: "A small, bitter fruit used to make oil." },
+        { word: "piano", definition: "A musical instrument with keys you press." },
+        { word: "river", definition: "A large, flowing body of water." },
+        { word: "smile", definition: "A happy face when you're glad." },
+        { word: "tulip", definition: "A colorful flower with a cup shape." },
+        { word: "unity", definition: "Being together as one." },
+        { word: "voice", definition: "The sound you make when you speak." },
+        { word: "water", definition: "A clear liquid you drink and use to wash." },
+        { word: "young", definition: "Not old; full of life." },
+        { word: "zesty", definition: "Full of energy and excitement." },
+        { word: "blaze", definition: "A big, bright fire." },
+        { word: "crown", definition: "A special hat worn by kings and queens." },
+        { word: "drink", definition: "A liquid you consume, like water or juice." },
+        { word: "field", definition: "A large open area of land." },
+        { word: "grace", definition: "Elegance and beauty in movement." },
+        { word: "happy", definition: "Feeling or showing pleasure." },
+        { word: "input", definition: "Something you put into a machine or system." },
+        { word: "jokes", definition: "Funny stories or things to make you laugh." },
+        { word: "kitty", definition: "A cute, small cat." },
+        { word: "leaps", definition: "Big jumps or bounds." },
+        { word: "mango", definition: "A sweet, juicy tropical fruit." },
+        { word: "nurse", definition: "A person who takes care of others when they're sick." },
+        { word: "oasis", definition: "A green area in a desert with water." },
+        { word: "prize", definition: "A reward you win in a game or contest." },
+        { word: "quick", definition: "Fast or speedy." },
+        { word: "robot", definition: "A machine that can do tasks." },
+        { word: "story", definition: "A tale or account of events." },
+        { word: "table", definition: "A piece of furniture with a flat top and legs." },
+        { word: "umbra", definition: "A shadow or dark area." },
+        { word: "vivid", definition: "Very bright or clear." },
+        { word: "whisk", definition: "A tool used for stirring or mixing." },
+        { word: "youth", definition: "The time when you are young." },
+        { word: "zonal", definition: "Related to a specific area or region." },
+        // Add more five-letter words with definitions here
+    ];
+
+
+
+
+    // Common Six-Letter Words with Definitions for Young Children
+    const sixLetterWords = [ 
+        { word: "banana", definition: "A long, yellow fruit that monkeys like to eat." },
+        { word: "castle", definition: "A big building where kings and queens live." },
+        { word: "flower", definition: "A pretty part of a plant that smells nice." },
+        { word: "garden", definition: "A place where plants and flowers are grown." },
+        { word: "hockey", definition: "A game where players use sticks to hit a puck into goals." },
+        { word: "island", definition: "A piece of land surrounded by water." },
+        { word: "jungle", definition: "A wild forest full of tall trees and animals." },
+        { word: "kitten", definition: "A cute, young cat." },
+        { word: "monkey", definition: "A playful animal that climbs trees and likes bananas." },
+        { word: "needle", definition: "A small tool used for sewing clothes." },
+        { word: "orange", definition: "A round, orange fruit that is juicy and sweet." },
+        { word: "planet", definition: "A big round thing that orbits a star, like Earth." },
+        { word: "puppy", definition: "A young dog that is very playful and cute." },
+        { word: "rocket", definition: "A vehicle that can fly high into space." },
+        { word: "school", definition: "A place where children go to learn and meet friends." },
+        { word: "soccer", definition: "A game where players kick a ball into a goal to score points." },
+        { word: "teacher", definition: "A person who helps children learn new things." },
+        { word: "tomato", definition: "A red, round fruit used in salads and cooking." },
+        { word: "yellow", definition: "A bright color like the sun or a banana." },
+        { word: "window", definition: "A clear opening in a wall that lets light in." },
+        { word: "animal", definition: "A living creature like a dog, cat, or elephant." },
+        { word: "basket", definition: "A container used to carry things, often made of woven material." },
+        { word: "butter", definition: "A creamy spread made from milk." },
+        { word: "camera", definition: "A device used to take pictures." },
+        { word: "circle", definition: "A round shape with no corners." },
+        { word: "dragon", definition: "A mythical creature that breathes fire and has wings." },
+        { word: "family", definition: "A group of people who are related to each other." },
+        { word: "friend", definition: "Someone you like and spend time with." },
+        { word: "jacket", definition: "A piece of clothing worn on the upper body to keep warm." },
+        { word: "little", definition: "Small in size." },
+        { word: "mirror", definition: "A smooth surface that reflects an image." },
+        { word: "mother", definition: "A female parent who takes care of children." },
+        { word: "nature", definition: "Everything in the world that is not made by humans, like trees and animals." },
+        { word: "office", definition: "A place where people work at desks." },
+        { word: "puppet", definition: "A toy controlled by a string or hand." },
+        { word: "purple", definition: "A color between blue and red." },
+        { word: "singer", definition: "A person who sings songs." },
+        { word: "turtle", definition: "A slow-moving animal with a shell on its back." },
+        { word: "whales", definition: "Large marine animals that live in the ocean." },
+        { word: "yacht", definition: "A fancy boat used for fun." },
+        { word: "zebra", definition: "A horse with black and white stripes." },
+        { word: "brick", definition: "A hard block used to build houses." },
+        { word: "candy", definition: "Sweet treats that taste yummy." },
+        { word: "daisy", definition: "A small, white flower with a yellow center." },
+        { word: "flute", definition: "A musical instrument you blow into." },
+        { word: "glove", definition: "Clothing you wear on your hands." },
+        { word: "heart", definition: "The organ that pumps blood in your body." },
+        { word: "jelly", definition: "A sweet spread made from fruit." },
+        { word: "mouse", definition: "A small animal that likes cheese." },
+        { word: "noise", definition: "Sounds that can be loud or soft." },
+        { word: "olive", definition: "A small, bitter fruit used to make oil." },
+        { word: "piano", definition: "A musical instrument with keys you press." },
+        { word: "river", definition: "A large, flowing body of water." },
+        { word: "smile", definition: "A happy face when you're glad." },
+        { word: "tulip", definition: "A colorful flower with a cup shape." },
+        { word: "unity", definition: "Being together as one." },
+        { word: "voice", definition: "The sound you make when you speak." },
+        { word: "water", definition: "A clear liquid you drink and use to wash." },
+        { word: "young", definition: "Not old; full of life." },
+        { word: "zesty", definition: "Full of energy and excitement." },
+        // Add more six-letter words with definitions here
+    ];
+
+
+    // Common Seven-Letter Words with Definitions for Young Children
+    const sevenLetterWords = [
+        { word: "balance", definition: "Keeping things steady and not falling." },
+        { word: "capture", definition: "To catch or take something." },
+        { word: "diamond", definition: "A shiny, hard stone that sparkles." },
+        { word: "elastic", definition: "Stretchy and can bounce back to its shape." },
+        { word: "freedom", definition: "Being able to do what you want." },
+        { word: "garage", definition: "A place where you keep cars." },
+        { word: "holiday", definition: "A special day when you don’t go to work or school." },
+        { word: "imagine", definition: "To think of something in your mind." },
+        { word: "journey", definition: "A trip from one place to another." },
+        { word: "kingdom", definition: "A land ruled by a king or queen." },
+        { word: "library", definition: "A place with many books to read." },
+        { word: "monster", definition: "A pretend scary creature." },
+        { word: "picture", definition: "A drawing or photo of something." },
+        { word: "rainbow", definition: "Colors that appear in the sky after rain." },
+        { word: "runner", definition: "Someone who runs fast." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        // Add more seven-letter words with definitions here
+        { word: "balloon", definition: "A colorful, inflatable toy that can fly." },
+        { word: "capture", definition: "To catch something, like a butterfly." },
+        { word: "diamond", definition: "A shiny, hard stone used in jewelry." },
+        { word: "elastic", definition: "Stretchy material that can go back to its shape." },
+        { word: "freedom", definition: "Being able to do what you want." },
+        { word: "garage", definition: "A place where cars are kept." },
+        { word: "holiday", definition: "A special day for fun or celebration." },
+        { word: "imagine", definition: "To think of something in your mind." },
+        { word: "journey", definition: "A trip from one place to another." },
+        { word: "kingdom", definition: "A land ruled by a king or queen." },
+        { word: "library", definition: "A place with many books to read." },
+        { word: "monster", definition: "A pretend scary creature." },
+        { word: "picture", definition: "A drawing or photo of something." },
+        { word: "rainbow", definition: "Colors that appear in the sky after rain." },
+        { word: "runner", definition: "Someone who runs fast." },
+        { word: "teacher", definition: "A person who helps you learn at school." },
+        { word: "traffic", definition: "Cars and buses moving on the road." },
+        { word: "trainer", definition: "Someone who helps you exercise or learn skills." },
+        { word: "umbrella", definition: "Something you use to stay dry in the rain." },
+        { word: "weather", definition: "How the sky looks, like sunny or rainy." },
+        { word: "weather", definition: "How the sky looks, like sunny or rainy." },
+        { word: "welcome", definition: "A greeting when someone arrives." },
+        { word: "wallet", definition: "A small case for money and cards." },
+        { word: "window", definition: "A clear part of a wall to see outside." },
+        { word: "wrinkle", definition: "Small lines on your skin." },
+        { word: "yogurt", definition: "A tasty, creamy food made from milk." },
+        { word: "zeppelin", definition: "A large, old-fashioned airship." },
+        { word: "zodiac", definition: "A circle of twelve signs in the sky." },
+        { word: "zigzag", definition: "A pattern with sharp turns going in different directions." },
+    ];
+
+
+    // Common Eight-Letter Words with Definitions for Young Children
+    const eightLetterWords = [
+        { word: "mountain", definition: "A very tall landform that rises high from the ground." },
+        { word: "notebook", definition: "A book with blank pages to write or draw in." },
+        { word: "painting", definition: "A picture made with paint." },
+        { word: "quadrant", definition: "One of four parts something is divided into." },
+        { word: "rainbow", definition: "A colorful arc that appears in the sky after rain." },
+        { word: "sandwich", definition: "Food with filling between two pieces of bread." },
+        { word: "triangle", definition: "A shape with three sides." },
+        { word: "umbrella", definition: "Something you hold to stay dry in the rain." },
+        { word: "volcano", definition: "A mountain that can erupt with lava." },
+        { word: "warehouse", definition: "A big building where things are kept." },
+        { word: "birthday", definition: "The day you were born and celebrate each year." },
+        { word: "building", definition: "A structure with walls and a roof where people live or work." },
+        { word: "children", definition: "Young people who are not adults." },
+        { word: "diamond", definition: "A shiny, hard stone used in jewelry." },
+        { word: "elephant", definition: "A large animal with a trunk and big ears." },
+        { word: "football", definition: "A game played with a ball that you kick or throw." },
+        { word: "holiday", definition: "A special day for fun or celebration." },
+        { word: "keyboard", definition: "The set of keys you press to type on a computer." },
+        { word: "language", definition: "A way people communicate using words and sentences." },
+        { word: "monkeys", definition: "Playful animals that climb trees and eat bananas." },
+        { word: "octopus", definition: "A sea animal with eight arms." },
+        { word: "pictures", definition: "Drawings or photos of things you see." },
+        { word: "rainfall", definition: "The amount of rain that falls." },
+        { word: "scooter", definition: "A small bike with a step-through frame." },
+        { word: "telephone", definition: "A device used to talk to someone far away." },
+        { word: "together", definition: "In the same place or doing something at the same time." },
+        { word: "vacation", definition: "A time when you take a break from school or work to relax." },
+        { word: "weathered", definition: "Changed by the weather, like rocks or trees." },
+        { word: "zookeeper", definition: "A person who takes care of animals in a zoo." },
+        // Add more eight-letter words with definitions here
+    ];
+
+    // Common Nine-Letter Words with Definitions for Young Children
+    const nineLetterWords = [
+        { word: "adventure", definition: "An exciting trip or experience." },
+        { word: "butterfly", definition: "A colorful insect with big wings." },
+        { word: "champions", definition: "Winners of a game or contest." },
+        { word: "discovery", definition: "Finding something new." },
+        { word: "electric", definition: "Powered by electricity." },
+        { word: "hospital", definition: "A place where sick people are cared for." },
+        { word: "journal", definition: "A book where you write your thoughts." },
+        { word: "keyboard", definition: "The set of keys you press on a computer." },
+        { word: "landscape", definition: "A view of land with hills, trees, and more." },
+        { word: "mountains", definition: "Very tall and big hills." },
+        { word: "notebook", definition: "A book with blank pages to write in." },
+        { word: "painting", definition: "A picture made with paint." },
+        { word: "queenly", definition: "Like a queen; very regal." },
+        { word: "rainbow", definition: "Colors that appear in the sky after rain." },
+        { word: "sandwich", definition: "Food with filling between two pieces of bread." },
+        { word: "triangle", definition: "A shape with three sides." },
+        { word: "umbrella", definition: "Something you hold to stay dry in the rain." },
+        { word: "volcanoes", definition: "Mountains that can erupt with lava." },
+        { word: "warehouse", definition: "A big building where things are kept." },
+        { word: "birthday", definition: "The day you were born and celebrate each year." },
+        { word: "building", definition: "A structure where people live or work." },
+        { word: "children", definition: "Young people who are not adults." },
+        { word: "elephant", definition: "A large animal with a long trunk and big ears." },
+        { word: "football", definition: "A game played with a ball that you kick or throw." },
+        { word: "holiday", definition: "A special day for fun or celebration." },
+        { word: "monkeys", definition: "Playful animals that climb trees and eat bananas." },
+        { word: "octopus", definition: "A sea animal with eight arms." },
+        { word: "pictures", definition: "Drawings or photos of things you see." },
+        { word: "scooters", definition: "Small bikes you can ride by pushing with your feet." },
+        { word: "turtles", definition: "Slow-moving animals with a shell on their back." },
+        { word: "yogurt", definition: "A tasty, creamy food made from milk." },
+        { word: "zeppelin", definition: "A large, old-fashioned airship." },
+    ];
+
+    // Common Ten-Letter Words with Definitions for Young Children
+    const tenLetterWords = [
+        { word: "friendship", definition: "Being friends and caring about each other." },
+        { word: "graduation", definition: "A special ceremony when you finish school." },
+        { word: "helicopter", definition: "A flying machine with spinning blades on top." },
+        { word: "jewelrybox", definition: "A box where you keep your pretty jewelry." },
+        { word: "toothbrush", definition: "A tool with bristles to clean your teeth." },
+        { word: "playground", definition: "A place with swings and slides where children play." },
+        { word: "fireworks", definition: "Bright lights that explode in the sky during celebrations." },
+        { word: "snowstorm", definition: "A heavy fall of snow with strong winds." },
+        { word: "strawberry", definition: "A sweet red fruit with tiny seeds on its skin." },
+        { word: "sunflower", definition: "A tall plant with a big yellow flower that turns to face the sun." },
+        { word: "schoolyard", definition: "The area outside your school where you play." },
+        { word: "snowflake", definition: "A small ice crystal that falls from the sky." },
+        { word: "rainforest", definition: "A thick, green forest with lots of rain." },
+        { word: "toothpaste", definition: "A creamy stuff you put on your toothbrush to clean teeth." },
+        { word: "watermelon", definition: "A big, juicy fruit with green skin and red inside." },
+        { word: "rocketship", definition: "A spaceship that travels to space." },
+        { word: "volcanoes", definition: "Mountains that can erupt with lava." },
+        { word: "adventure", definition: "An exciting trip or experience." },
+        { word: "language", definition: "A way people communicate using words." },
+        { word: "telephone", definition: "A device used to talk to someone far away." },
+        { word: "butterfly", definition: "A colorful insect with big wings." },
+        { word: "scooters", definition: "Small bikes you can ride by pushing with your feet." },
+        { word: "yogurt", definition: "A tasty, creamy food made from milk." },
+        { word: "pictures", definition: "Drawings or photos of things you see." },
+        { word: "umbrella", definition: "Something you hold to stay dry in the rain." },
+        { word: "dragonfly", definition: "A flying insect with long wings and a long body." },
+        { word: "backpack", definition: "A bag you wear on your back to carry things." },
+        { word: "dollhouse", definition: "A small house for dolls to live in." },
+        { word: "landscape", definition: "A view of land with hills, trees, and more." },
+        { word: "shelters", definition: "Places that protect you from bad weather." },
+        { word: "storybook", definition: "A book with stories and pictures." },
+        { word: "basketball", definition: "A game where you throw a ball into a hoop." },
+        { word: "buttercup", definition: "A small, yellow flower." },
+        { word: "candyland", definition: "A fun place filled with sweet treats." },
+        { word: "fireplace", definition: "A place in a house where you can have a fire for warmth." },
+        { word: "macaroni", definition: "A type of pasta shaped like small tubes." },
+        { word: "raincloud", definition: "A cloud that brings rain." },
+        { word: "sunshine", definition: "Bright light from the sun." },
+        { word: "treasure", definition: "Valuable things like gold or jewels." },
+        { word: "waterfall", definition: "Water falling from a high place." },
+    ];
+
+        // Initialize Variables
+        let testWords = [];
+        let currentWordIndex = 0;
+        let userAnswers = [];
+        let countdownInterval;
+        let countdownTime = 3;
+
+        // DOM Elements
+        const startTestButton = document.getElementById('startTest');
+        const testArea = document.getElementById('testArea');
+        const wordDisplay = document.getElementById('wordDisplay');
+        const countdownDisplay = document.getElementById('countdown');
+        const inputWord = document.getElementById('inputWord');
+        const resultsDiv = document.getElementById('results');
+        const resultsList = document.getElementById('resultsList');
+        const numWordsInput = document.getElementById('numWords');
+        const twoLetterCheckbox = document.getElementById('twoLetter');
+        const threeLetterCheckbox = document.getElementById('threeLetter');
+        const fourLetterCheckbox = document.getElementById('fourLetter');
+        const fiveLetterCheckbox = document.getElementById('fiveLetter');
+        const sixLetterCheckbox = document.getElementById('sixLetter');
+        const sevenLetterCheckbox = document.getElementById('sevenLetter');
+        const eightLetterCheckbox = document.getElementById('eightLetter');
+        const nineLetterCheckbox = document.getElementById('nineLetter');
+        const tenLetterCheckbox = document.getElementById('tenLetter');
+
+        // Event Listener for Start Test Button
+        startTestButton.addEventListener('click', startTest);
+
+        // Event Listener for Enter Key in Input
+        inputWord.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Function to Start the Test
+        function startTest() {
+            // Reset previous results
+            resultsList.innerHTML = '';
+            resultsDiv.classList.add('hidden');
+            testArea.classList.remove('hidden');
+
+            // Get selected word lengths
+            let selectedLengths = [];
+            if (twoLetterCheckbox.checked) selectedLengths.push(2);
+            if (threeLetterCheckbox.checked) selectedLengths.push(3);
+            if (fourLetterCheckbox.checked) selectedLengths.push(4);
+            if (fiveLetterCheckbox.checked) selectedLengths.push(5);
+            if (sixLetterCheckbox.checked) selectedLengths.push(6);
+            if (sevenLetterCheckbox.checked) selectedLengths.push(7);
+            if (eightLetterCheckbox.checked) selectedLengths.push(8);
+            if (nineLetterCheckbox.checked) selectedLengths.push(9);
+            if (tenLetterCheckbox.checked) selectedLengths.push(10);
+
+            if (selectedLengths.length === 0) {
+                alert("Please select at least one word length.");
+                return;
+            }
+
+            // Compile all possible words based on selected lengths
+            let allPossibleWords = [];
+            selectedLengths.forEach(length => {
+                switch(length) {
+                    case 2:
+                        allPossibleWords = allPossibleWords.concat(twoLetterWords);
+                        break;
+                    case 3:
+                        allPossibleWords = allPossibleWords.concat(threeLetterWords);
+                        break;
+                    case 4:
+                        allPossibleWords = allPossibleWords.concat(fourLetterWords);
+                        break;
+                    case 5:
+                        allPossibleWords = allPossibleWords.concat(fiveLetterWords);
+                        break;
+                    case 6:
+                        allPossibleWords = allPossibleWords.concat(sixLetterWords);
+                        break;
+                    case 7:
+                        allPossibleWords = allPossibleWords.concat(sevenLetterWords);
+                        break;
+                    case 8:
+                        allPossibleWords = allPossibleWords.concat(eightLetterWords);
+                        break;
+                    case 9:
+                        allPossibleWords = allPossibleWords.concat(nineLetterWords);
+                        break;
+                    case 10:
+                        allPossibleWords = allPossibleWords.concat(tenLetterWords);
+                        break;
+                }
+            });
+
+            // Remove duplicates based on word property
+            const uniqueWordsMap = {};
+            allPossibleWords.forEach(item => {
+                uniqueWordsMap[item.word.toLowerCase()] = item;
+            });
+            allPossibleWords = Object.values(uniqueWordsMap);
+
+            // Get number of words for the test
+            let numWords = parseInt(numWordsInput.value);
+            if (isNaN(numWords) || numWords < 1) {
+                alert("Please enter a valid number of words.");
+                return;
+            }
+            if (numWords > allPossibleWords.length) {
+                alert(`Only ${allPossibleWords.length} words available for the selected lengths.`);
+                numWords = allPossibleWords.length;
+            }
+
+            // Shuffle and select words
+            testWords = shuffleArray(allPossibleWords).slice(0, numWords);
+            currentWordIndex = 0;
+            userAnswers = [];
+
+            // Start the first word
+            showNextWord();
+        }
+
+        // Function to Shuffle an Array (Fisher-Yates Shuffle)
+        function shuffleArray(array) {
+            let shuffled = array.slice();
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // Function to Show the Next Word
+        function showNextWord() {
+            if (currentWordIndex >= testWords.length) {
+                endTest();
+                return;
+            }
+
+            // Reset input field
+            inputWord.value = '';
+            inputWord.focus();
+
+            // Display the current word and start countdown
+            const currentWord = testWords[currentWordIndex].word;
+            wordDisplay.textContent = currentWord;
+            countdownTime = 3;
+            countdownDisplay.textContent = countdownTime;
+            countdownDisplay.style.opacity = 1;
+
+            // Start countdown with fading effect
+            countdownInterval = setInterval(() => {
+                countdownTime--;
+                if (countdownTime <= 0) {
+                    clearInterval(countdownInterval);
+                    wordDisplay.textContent = '';
+                    countdownDisplay.textContent = '';
+                } else {
+                    countdownDisplay.textContent = countdownTime;
+                    countdownDisplay.style.opacity = countdownTime / 3; // Fade effect
+                }
+            }, 1000);
+        }
+
+        // Function to Check the Answer
+        function checkAnswer() {
+            clearInterval(countdownInterval);
+
+            const correctWord = testWords[currentWordIndex].word.toLowerCase();
+            const userWord = inputWord.value.trim().toLowerCase();
+
+            userAnswers.push({
+                word: correctWord,
+                answer: userWord,
+                definition: testWords[currentWordIndex].definition
+            });
+
+            currentWordIndex++;
+            showNextWord();
+        }
+
+        // Function to End the Test and Show Results
+        function endTest() {
+            testArea.classList.add('hidden');
+            resultsDiv.classList.remove('hidden');
+
+            userAnswers.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.classList.add(item.word === item.answer ? 'correct' : 'incorrect');
+
+                const numberCell = document.createElement('td');
+                numberCell.textContent = index + 1;
+                row.appendChild(numberCell);
+
+                const wordCell = document.createElement('td');
+                wordCell.textContent = item.word;
+                row.appendChild(wordCell);
+
+                const answerCell = document.createElement('td');
+                answerCell.textContent = item.answer || '—';
+                row.appendChild(answerCell);
+
+                const definitionCell = document.createElement('td');
+                definitionCell.textContent = item.definition;
+                row.appendChild(definitionCell);
+
+                const resultCell = document.createElement('td');
+                resultCell.textContent = item.word === item.answer ? '✅' : '❌';
+                row.appendChild(resultCell);
+
+                resultsList.appendChild(row);
+            });
+
+            // Scroll to results
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>
