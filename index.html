@@ -261,15 +261,16 @@
             margin-top: 5px;
         }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 5px;
-            border: 2px solid #1e90ff;
-            border-radius: 5px;
-            text-align: center;
-            transition: border-color 0.3s ease;
-            font-size: 1em;
-        }
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #1e90ff;
+    border-radius: 5px;
+    text-align: center;
+    transition: border-color 0.3s ease;
+    font-size: 1em;
+}
 
         input[type="text"]:focus {
             border-color: #0d6efd;
@@ -882,8 +883,11 @@ function handleAnswerInput(inputField) {
 
                     // Create answer cell with input field
                     let answerCell = document.createElement('td');
-                    let answerInput = document.createElement('input');
-                    answerInput.type = 'text';
+		let answerInput = document.createElement('input');
+		answerInput.type = 'number';
+		answerInput.inputMode = 'numeric';
+		answerInput.step = '1'; // Ensures only integer inputs
+
                     answerInput.dataset.answer = problemObj.answer;
                     answerInput.dataset.problemIndex = problemsData.length;
                     answerInput.dataset.fillInTheBlanks = problemObj.fillInTheBlanks;
