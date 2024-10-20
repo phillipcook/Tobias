@@ -19,6 +19,7 @@
             align-items: center;
             padding: 20px;
             min-height: 100vh;
+            position: relative;
         }
 
         h1 {
@@ -82,6 +83,25 @@
         }
 
         #startTest:hover {
+            background-color: #0d6efd;
+        }
+
+        /* Maths button (Styled the same as Start Test button) */
+        #mathsButton {
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        #mathsButton:hover {
             background-color: #0d6efd;
         }
 
@@ -150,7 +170,7 @@
         }
 
         #results tr.incorrect {
-            background-color: #f8d7da;
+            background-color: #fff3cd;
         }
 
         #resultsCaption {
@@ -182,11 +202,17 @@
                 margin: 5px;
             }
         }
+
     </style>
 </head>
 <body>
 
     <h1>Spelling Test</h1>
+
+    <!-- Maths button in the top right corner -->
+    <a href="https://phillipcook.github.io/Maths/" target="_blank">
+        <button id="mathsButton">Maths</button>
+    </a>
 
     <div class="controls">
         <div>
@@ -199,11 +225,11 @@
             <label><input type="checkbox" id="threeLetter" checked> 3-letter words</label>
             <label><input type="checkbox" id="fourLetter" checked> 4-letter words</label>
             <label><input type="checkbox" id="fiveLetter" checked> 5-letter words</label>
-            <label><input type="checkbox" id="sixLetter" checked> 6-letter words</label>
-            <label><input type="checkbox" id="sevenLetter" checked> 7-letter words</label>
-            <label><input type="checkbox" id="eightLetter" checked> 8-letter words</label>
-            <label><input type="checkbox" id="nineLetter" checked> 9-letter words</label>
-            <label><input type="checkbox" id="tenLetter" checked> 10-letter words</label>
+            <label><input type="checkbox" id="sixLetter"> 6-letter words</label>
+            <label><input type="checkbox" id="sevenLetter"> 7-letter words</label>
+            <label><input type="checkbox" id="eightLetter"> 8-letter words</label>
+            <label><input type="checkbox" id="nineLetter"> 9-letter words</label>
+            <label><input type="checkbox" id="tenLetter"> 10-letter words</label>
         </div>
 
         <button id="startTest">Start Test</button>
