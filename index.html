@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
             align-items: center;
             padding: 20px;
             min-height: 100vh;
-            position: relative;
+            position: relative; /* To position the Spelling button */
         }
 
         h1 {
@@ -29,6 +29,102 @@
             text-align: center;
         }
 
+        /* Animations */
+        /* Animation for fading dots downward and back up */
+        @keyframes fadeOutDownLoop {
+            0% { opacity: 1; transform: translateY(0); }      /* Start fully visible */
+            50% { opacity: 0; transform: translateY(10px); }  /* Midway invisible, moved 10px down */
+            100% { opacity: 1; transform: translateY(0); }    /* End fully visible, back to original position */
+        }
+
+        /* Animation for moving dots right and then back left */
+        @keyframes moveRightLeft {
+            0% { opacity: 1; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(10px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Apply looping fade-down animation */
+        .animate-fade {
+            animation: fadeOutDownLoop 2s infinite;
+        }
+
+        /* Apply right-to-left animation with loop */
+        .animate-slide {
+            animation: moveRightLeft 2s infinite;
+        }
+
+        /* Shake Animation */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .animate-shake {
+            animation: shake 0.5s;
+        }
+
+        /* Dot Styles */
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #333;
+            border-radius: 50%;
+            margin-right: 2px;
+        }
+
+        /* Vertical Bar for Division Groups */
+        .group-separator {
+            display: inline-block;
+            width: 2px;
+            height: 10px;
+            background-color: #333;
+            margin: 0 5px;
+            vertical-align: middle;
+        }
+
+        /* Styles for correct and incorrect answers */
+.correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724 !important;
+}
+
+.incorrect {
+    background-color: #f8d7da !important; /* Light red background */
+    border-color: #dc3545 !important; /* Dark red border */
+    color: #ffffff !important; /* White text for contrast */
+}
+        /* Highlight */
+        .highlight {
+            background-color: #ffffcc;
+        }
+
+        /* Spelling Button */
+        #spellingButton {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        #spellingButton:hover {
+            background-color: #0d6efd;
+        }
+
+        /* Styles for the rest of the page */
         #scoreDisplay {
             font-size: 1.5em;
             font-weight: bold;
@@ -60,7 +156,7 @@
 
         /* Improved Spacing for Checkboxes */
         #settingsForm label {
-            margin: 5px 20px;
+            margin: 5px 20px; /* Increased margin for better spacing */
             display: flex;
             align-items: center;
             font-size: 1em;
@@ -84,14 +180,14 @@
         }
 
         #operatorSelection label {
-            margin: 5px 20px;
+            margin: 5px 20px; /* Increased margin for better spacing */
             display: flex;
             align-items: center;
             font-size: 1em;
         }
 
-        /* Styled Buttons */
-        #generateProblems, #spellingButton {
+        /* Styled Button */
+        #generateProblems {
             background-color: #1e90ff;
             color: #fff;
             border: none;
@@ -103,15 +199,8 @@
             margin-top: 10px;
         }
 
-        #generateProblems:hover, #spellingButton:hover {
+        #generateProblems:hover {
             background-color: #0d6efd;
-        }
-
-        /* Spelling Button Position */
-        #spellingButton {
-            position: absolute;
-            top: 20px;
-            right: 20px;
         }
 
         /* Test Mode Checkbox */
@@ -145,7 +234,7 @@
             border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
-            vertical-align: top;
+            vertical-align: top; /* Ensure top alignment for multi-line content */
         }
 
         th {
@@ -155,6 +244,21 @@
 
         td {
             background-color: #ffffff;
+        }
+
+        /* Ensure multiple lines in problem cell */
+        .problem-text {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .visual-aid {
+            display: block;
+            color: #555;
+            font-size: 0.9em;
+            margin-top: 5px;
         }
 
         input[type="text"] {
@@ -222,7 +326,6 @@
     </a>
 
     <div id="scoreDisplay">Score: 0 / 0</div>
-
     <form id="settingsForm" onsubmit="return false;">
         <div>
             <label for="minNum">Min Number:
@@ -266,7 +369,6 @@
         </div>
         <button type="button" id="generateProblems">Generate Problems</button>
     </form>
-
     <div id="problemsArea"></div>
 
     <script>
@@ -306,62 +408,61 @@
 
         // Function to generate visual representation based on operator and operands
         // Addition Visual Aid with Answer in FIB Mode
-function generateVisualAid(problemObj, isFillInTheBlank) {
-    const { operator, operand1, operand2, answer, answer2, missingOperand } = problemObj;
-    let visualAid = '';
+        function generateVisualAid(problemObj, isFillInTheBlank) {
+            const { operator, operand1, operand2, answer, answer2, missingOperand } = problemObj;
+            let visualAid = '';
 
-    switch (operator) {
-        case '+':
-            visualAid = isFillInTheBlank
-                ? (missingOperand === 'operand1'
-                    ? `${emptyBox} + ${getDotsHTML(operand2)} = ${getDotsHTML(answer2)}`  // Shows full answer2 as dots
-                    : `${getDotsHTML(operand1)} + ${emptyBox} = ${getDotsHTML(answer2)}`)
-                : `${getDotsHTML(operand1)} + ${getDotsHTML(operand2)} = `;
-            break;
-        case '-':
-            visualAid = isFillInTheBlank
-                ? (missingOperand === 'operand1'
-                    ? `${emptyBox} - ${getDotsHTML(operand2)} = ${getDotsHTML(answer2)}`  // Shows full answer2 as dots
-                    : `${getDotsHTML(operand1)} - ${emptyBox} = ${getDotsHTML(answer2)}`)
-                : `${getDotsHTML(operand1)}`;
-            break;
+            switch (operator) {
+                case '+':
+                    visualAid = isFillInTheBlank
+                        ? (missingOperand === 'operand1'
+                            ? `${emptyBox} + ${getDotsHTML(operand2)} = ${getDotsHTML(answer2)}`  // Shows full answer2 as dots
+                            : `${getDotsHTML(operand1)} + ${emptyBox} = ${getDotsHTML(answer2)}`)
+                        : `${getDotsHTML(operand1)} + ${getDotsHTML(operand2)} = `;
+                    break;
+                case '-':
+                    visualAid = isFillInTheBlank
+                        ? (missingOperand === 'operand1'
+                            ? `${emptyBox} - ${getDotsHTML(operand2)} = ${getDotsHTML(answer2)}`  // Shows full answer2 as dots
+                            : `${getDotsHTML(operand1)} - ${emptyBox} = ${getDotsHTML(answer2)}`)
+                        : `${getDotsHTML(operand1)}`;
+                    break;
 
-        case '*':
-            if (isFillInTheBlank) {
-                visualAid = missingOperand === 'operand1'
-                    ? `${emptyBox} × ${operand2} =`
-                    : `${operand1} × ${emptyBox} =`;
-            } else {
-                for (let i = 0; i < operand1; i++) {
-                    visualAid += `${getDotsHTML(operand2)}${i < operand1 - 1 ? ' + ' : ''}`;
-                }
-            }
-            break;
-
-        case '/':
-            if (isFillInTheBlank) {
-                if (missingOperand === 'operand1') {
-                    quotient = answer / operand2;
-                    for (let i = 0; i < operand2; i++) {
-                        visualAid += `${getDotsHTML(quotient)}${i < operand2 - 1 ? ' | ' : ''}`;
+                case '*':
+                    if (isFillInTheBlank) {
+                        visualAid = missingOperand === 'operand1'
+                            ? `${emptyBox} × ${operand2} =`
+                            : `${operand1} × ${emptyBox} =`;
+                    } else {
+                        for (let i = 0; i < operand1; i++) {
+                            visualAid += `${getDotsHTML(operand2)}${i < operand1 - 1 ? ' + ' : ''}`;
+                        }
                     }
-                    visualAid = `${emptyBox} ÷ ${getDotsHTML(operand2)} = ${visualAid}`;
-                }
-            } else {
-                quotient = answer;
-                for (let i = 0; i < operand2; i++) {
-                    visualAid += `${getDotsHTML(quotient)}${i < operand2 - 1 ? ' | ' : ''}`;
-                }
+                    break;
+
+                case '/':
+                    if (isFillInTheBlank) {
+                        if (missingOperand === 'operand1') {
+                            let quotient = answer / operand2;
+                            for (let i = 0; i < operand2; i++) {
+                                visualAid += `${getDotsHTML(quotient)}${i < operand2 - 1 ? ' | ' : ''}`;
+                            }
+                            visualAid = `${emptyBox} ÷ ${getDotsHTML(operand2)} = ${visualAid}`;
+                        }
+                    } else {
+                        let quotient = answer;
+                        for (let i = 0; i < operand2; i++) {
+                            visualAid += `${getDotsHTML(quotient)}${i < operand2 - 1 ? ' | ' : ''}`;
+                        }
+                    }
+                    break;
+
+                default:
+                    visualAid = '';
             }
-            break;
 
-        default:
-            visualAid = '';
-    }
-
-    return visualAid;
-}
-
+            return visualAid;
+        }
 
         // Function to generate a random integer between min and max (inclusive)
         function getRandomInt(min, max) {
@@ -371,31 +472,31 @@ function generateVisualAid(problemObj, isFillInTheBlank) {
         }
 
         // Function to generate a single problem object
-function createProblem(operators, min, max, allowNegative, fillInTheBlanks) {
-    let operator = operators[getRandomInt(0, operators.length - 1)];
-    let operand1, operand2, answer, answer2, missingOperand = null;
-    let result;
+        function createProblem(operators, min, max, allowNegative, fillInTheBlanks) {
+            let operator = operators[getRandomInt(0, operators.length - 1)];
+            let operand1, operand2, answer, answer2, missingOperand = null;
+            let result;
 
-    switch (operator) {
-        case '+':
-            operand1 = getRandomInt(min, max);
-            operand2 = getRandomInt(min, max);
-            result = operand1 + operand2;
+            switch (operator) {
+                case '+':
+                    operand1 = getRandomInt(min, max);
+                    operand2 = getRandomInt(min, max);
+                    result = operand1 + operand2;
 
-            if (fillInTheBlanks) {
-                missingOperand = Math.random() < 0.5 ? 'operand1' : 'operand2';
-               
-                if (missingOperand === 'operand1') {
-                    answer = operand1;    // Missing operand’s value
-                    operand1 = emptyBox;  // Hide operand1
-                } else {
-                    answer = operand2;    // Missing operand’s value
-                    operand2 = emptyBox;  // Hide operand2
-                }
-            } else {
-                answer = result;         // If no blanks, set answer to full result
-            }
-            break;
+                    if (fillInTheBlanks) {
+                        missingOperand = Math.random() < 0.5 ? 'operand1' : 'operand2';
+                       
+                        if (missingOperand === 'operand1') {
+                            answer = operand1;    // Missing operand’s value
+                            operand1 = emptyBox;  // Hide operand1
+                        } else {
+                            answer = operand2;    // Missing operand’s value
+                            operand2 = emptyBox;  // Hide operand2
+                        }
+                    } else {
+                        answer = result;         // If no blanks, set answer to full result
+                    }
+                    break;
                 case '-':
                     operand1 = getRandomInt(min, max);
                     operand2 = getRandomInt(min, max);
@@ -504,7 +605,7 @@ function createProblem(operators, min, max, allowNegative, fillInTheBlanks) {
                 operand1: operand1,
                 operand2: operand2,
                 answer: answer,
-		answer2: result,
+                answer2: result,
                 fillInTheBlanks: fillInTheBlanks,
                 missingOperand: missingOperand,
                 result: result, // Store the result for correct problem formatting
@@ -522,9 +623,14 @@ function handleAnswerInput(inputField) {
     let correctAnswer = problemObj.answer.toString();
     let testMode = document.getElementById('testMode').checked;
 
+    // Check if the user has entered enough digits before validating
+    if (userAnswer.length < correctAnswer.length) {
+        return; // Wait for more input
+    }
+
     if (userAnswer === correctAnswer) {
         // Correct answer
-        inputField.classList.remove('incorrect', 'shake');
+        inputField.classList.remove('incorrect');
         inputField.classList.add('correct');
         if (inputField.dataset.answeredCorrectly === 'false') {
             correctAnswers++;
@@ -532,41 +638,67 @@ function handleAnswerInput(inputField) {
             updateScore();
         }
         if (testMode) {
-            // Disable the input to prevent changes in test mode
+            // Disable the input to prevent changes
             inputField.disabled = true;
         }
 
+        // Trigger fade or slide animation if this is a subtraction problem
+        if (problemObj.operator === '-' && !testMode) {
+            // Randomly decide to apply fade or slide animation
+            let animationType = Math.random() < 0.5 ? 'animate-fade' : 'animate-slide';
+            problemObj.problemCell.classList.add(animationType);
+            // Remove the animation class after animation completes
+            problemObj.problemCell.addEventListener('animationend', () => {
+                problemObj.problemCell.classList.remove(animationType);
+            }, { once: true });
+        }
+
+        // Update visual aid if Fill in the Blanks is enabled
+        if (problemObj.fillInTheBlanks && !testMode) {
+            updateVisualAidWithAnswer(problemObj);
+        }
         // Move to next input
         moveToNextInput(inputField);
     } else {
         // Incorrect answer
         inputField.classList.remove('correct');
-        inputField.classList.add('incorrect', 'shake');
+        inputField.classList.add('incorrect', 'animate-shake'); // Apply shake animation
+
+        // Clear the input field to make it blank
+        inputField.value = '';
 
         // Remove the shake class after animation ends to allow re-triggering
         inputField.addEventListener('animationend', () => {
-            inputField.classList.remove('shake');
-        });
+            inputField.classList.remove('animate-shake');
+        }, { once: true }); // Ensure the listener is removed after first trigger
 
-        // Clear the input field (only in non-test mode)
-        if (!testMode) {
-            inputField.value = '';
-        }
+        // Maintain the red background by keeping the 'incorrect' class
+        // No need to change the background color; it remains as defined in CSS
 
         if (inputField.dataset.answeredCorrectly === 'true') {
             correctAnswers--;
             inputField.dataset.answeredCorrectly = 'false';
             updateScore();
         }
-
         if (testMode) {
-            // Disable the input to prevent changes in test mode
+            // Disable the input to prevent changes
             inputField.disabled = true;
-            moveToNextInput(inputField); // Move to the next input after incorrect answer
+
+            // Move to next input in Test Mode After Incorrect Answer
+            moveToNextInput(inputField);
         }
     }
 }
 
+
+        // Function to trigger shake animation on a problem cell
+        function animateShake(problemCell) {
+            problemCell.classList.add('animate-shake');
+            // Remove the class after animation completes to allow re-triggering
+            problemCell.addEventListener('animationend', () => {
+                problemCell.classList.remove('animate-shake');
+            }, { once: true });
+        }
 
         // Function to move focus to the next input field
         function moveToNextInput(currentInput) {
@@ -653,7 +785,7 @@ function handleAnswerInput(inputField) {
                 return;
             }
 
-            // **Added Code: Validate Division Settings**
+            // Validate Division Settings
             if (operators.includes('/')) {
                 let divisionPossible = false;
                 // Iterate through possible operand2 values
@@ -673,7 +805,7 @@ function handleAnswerInput(inputField) {
                     return;
                 }
             }
-            // **End of Added Code**
+            // End of Validation
 
             let table = document.createElement('table');
 
@@ -692,7 +824,7 @@ function handleAnswerInput(inputField) {
             // Create table body
             let tbody = document.createElement('tbody');
 
-            // **Added Code: Initialize a Set to track unique problems**
+            // Initialize a Set to track unique problems
             const generatedProblems = new Set();
 
             // Generate 10 rows with 3 problems each (total 30 problems)
@@ -704,7 +836,7 @@ function handleAnswerInput(inputField) {
                     let maxAttempts = 10; // Increased attempts for better uniqueness
                     let identifier;
 
-                    // **Added Code: Attempt to generate a unique problem up to maxAttempts times**
+                    // Attempt to generate a unique problem up to maxAttempts times
                     do {
                         problemObj = createProblem(operators, minNum, maxNum, allowNegativeAnswers, fillInTheBlanksEnabled);
                         attempts++;
@@ -758,6 +890,7 @@ function handleAnswerInput(inputField) {
                     answerInput.dataset.operator = problemObj.operator;
                     answerInput.dataset.answeredCorrectly = 'false';
                     answerInput.placeholder = problemObj.fillInTheBlanks ? 'Your Answer' : 'Answer';
+                    answerInput.maxLength = problemObj.answer.toString().length; // Set maxlength based on answer length
 
                     // Add event listeners
                     answerInput.addEventListener('focus', function() {
@@ -856,61 +989,68 @@ function handleAnswerInput(inputField) {
             return `${problemObj.operand1} ${getOperatorSymbol(problemObj.operator)} ${problemObj.operand2} =`;
         }
 
-function stopSubtractionAnimation(problemCell) {
-    const visualAidElement = problemCell.querySelector('.visual-aid');
-    if (!visualAidElement) return;
-
-    // Remove both animation classes from all dots
-    const dots = visualAidElement.querySelectorAll('.dot');
-    dots.forEach(dot => {
-        dot.classList.remove('animate-fade', 'animate-slide');
-    });
-}
-
-function animateSubtraction(problemCell, numberToFade) {
-    const visualAidElement = problemCell.querySelector('.visual-aid');
-    if (!visualAidElement) return;
-
-    // Locate the last "=" sign position in the text content
-    const equationText = visualAidElement.textContent;
-    const lastEqualSignIndex = equationText.lastIndexOf('=');
-
-    // Get all dots in the visual aid element
-    const dots = Array.from(visualAidElement.querySelectorAll('.dot'));
-
-    // Determine which animation to apply based on the presence of "="
-    if (lastEqualSignIndex !== -1) {
-        // Case where "=" is present: apply fade-down animation to dots before "="
-
-        const dotsBeforeEquals = [];
-        let foundEqualSign = false;
-
-        visualAidElement.childNodes.forEach(node => {
-            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('=') && !foundEqualSign) {
-                foundEqualSign = true;
-            }
-            if (!foundEqualSign && node.classList && node.classList.contains('dot')) {
-                dotsBeforeEquals.push(node);
-            }
-        });
-
-        // Apply fade-down animation to the last 'numberToFade' dots before "="
-        const startFadeIndex = Math.max(0, dotsBeforeEquals.length - numberToFade);
-        for (let i = startFadeIndex; i < dotsBeforeEquals.length; i++) {
-            dotsBeforeEquals[i].classList.add('animate-fade'); // Apply fade-down animation
+        // Function to trigger shake animation on a problem cell
+        function animateShake(problemCell) {
+            problemCell.classList.add('animate-shake');
+            // Remove the class after animation completes to allow re-triggering
+            problemCell.addEventListener('animationend', () => {
+                problemCell.classList.remove('animate-shake');
+            }, { once: true });
         }
-    } else {
-        // Case where "=" is not present: apply right-to-left animation to the rightmost dots
-        const startFadeIndex = Math.max(0, dots.length - numberToFade);
-        for (let i = startFadeIndex; i < dots.length; i++) {
-            dots[i].classList.add('animate-slide'); // Apply right-to-left animation
+
+        // Function to stop subtraction animation
+        function stopSubtractionAnimation(problemCell) {
+            const visualAidElement = problemCell.querySelector('.visual-aid');
+            if (!visualAidElement) return;
+
+            // Remove both animation classes from all dots
+            const dots = visualAidElement.querySelectorAll('.dot');
+            dots.forEach(dot => {
+                dot.classList.remove('animate-fade', 'animate-slide');
+            });
         }
-    }
-}
 
+        // Function to animate subtraction (fade and slide)
+        function animateSubtraction(problemCell, numberToFade) {
+            const visualAidElement = problemCell.querySelector('.visual-aid');
+            if (!visualAidElement) return;
 
+            // Locate the last "=" sign position in the text content
+            const equationText = visualAidElement.textContent;
+            const lastEqualSignIndex = equationText.lastIndexOf('=');
 
+            // Get all dots in the visual aid element
+            const dots = Array.from(visualAidElement.querySelectorAll('.dot'));
 
+            // Determine which animation to apply based on the presence of "="
+            if (lastEqualSignIndex !== -1) {
+                // Case where "=" is present: apply fade-down animation to dots before "="
+
+                const dotsBeforeEquals = [];
+                let foundEqualSign = false;
+
+                visualAidElement.childNodes.forEach(node => {
+                    if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('=') && !foundEqualSign) {
+                        foundEqualSign = true;
+                    }
+                    if (!foundEqualSign && node.classList && node.classList.contains('dot')) {
+                        dotsBeforeEquals.push(node);
+                    }
+                });
+
+                // Apply fade-down animation to the last 'numberToFade' dots before "="
+                const startFadeIndex = Math.max(0, dotsBeforeEquals.length - numberToFade);
+                for (let i = startFadeIndex; i < dotsBeforeEquals.length; i++) {
+                    dotsBeforeEquals[i].classList.add('animate-fade'); // Apply fade-down animation
+                }
+            } else {
+                // Case where "=" is not present: apply right-to-left animation to the rightmost dots
+                const startFadeIndex = Math.max(0, dots.length - numberToFade);
+                for (let i = startFadeIndex; i < dots.length; i++) {
+                    dots[i].classList.add('animate-slide'); // Apply right-to-left animation
+                }
+            }
+        }
 
         // Handle clicks outside answer input fields to focus next empty answer
         document.addEventListener('mousedown', function(event) {
