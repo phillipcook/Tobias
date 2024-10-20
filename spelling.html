@@ -44,7 +44,7 @@
             align-items: center;
         }
 
-        /* Profile Selection Container */
+             /* Profile Selection Container */
         .profile-selection {
             display: flex;
             align-items: center; /* Vertically center items */
@@ -96,6 +96,13 @@
 
         #deleteProfile:hover {
             background-color: #c82333; /* Darker red on hover */
+        }
+
+        /* Disable Delete and View Correct Words Buttons Initially */
+        #deleteProfile:disabled,
+        #viewCorrectWords:disabled {
+            background-color: #6c757d; /* Gray color for disabled state */
+            cursor: not-allowed;
         }
 
         /* Number of Words Container */
@@ -367,7 +374,7 @@
 </head>
 <body>
 
-    <h1>Spelling Test</h1>
+  <h1>Spelling Test</h1>
 
     <!-- Maths button in the top right corner -->
     <a href="index.html">
@@ -380,11 +387,10 @@
             <label for="profileSelect">Select Profile:</label>
             <select id="profileSelect">
                 <option value="" disabled selected>Select a profile</option>
-                <option value="Tobias">Tobias</option>
-                <option value="Leia">Leia</option>
+                <!-- Default profiles removed -->
             </select>
             <button id="addProfile">Add Profile</button>
-            <button id="deleteProfile">Delete Profile</button>
+            <button id="deleteProfile" disabled>Delete Profile</button>
         </div>
 
         <!-- Number of Words with Quick-Select Buttons -->
@@ -413,7 +419,7 @@
 
         <!-- Action Buttons -->
         <button id="startTest" disabled>Start Test</button>
-        <button id="viewCorrectWords">View Correct Words</button>
+        <button id="viewCorrectWords" disabled>View Correct Words</button>
         <button id="resetProgress">Reset Progress</button>
     </div>
 
@@ -451,7 +457,7 @@
     </div>
 
     <!-- Single Script Block -->
-    <script>
+        <script>
         // Define the password
         const RESET_PASSWORD = 'phillip';
 
@@ -969,7 +975,7 @@
     ];
 
 
-         // Event Listeners
+          // Event Listeners
         startTestButton.addEventListener('click', startTest);
         inputWord.addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
@@ -1034,17 +1040,32 @@
                 option.textContent = profile;
                 profileSelect.appendChild(option);
             });
+
+            // Enable or disable buttons based on profiles
+            const hasProfiles = profiles.length > 0;
+            deleteProfileButton.disabled = !hasProfiles;
+            viewCorrectWordsButton.disabled = !hasProfiles;
+
+            // Optionally, prompt to add a profile if none exist
+            if (!hasProfiles) {
+                // Uncomment the following line if you want to automatically prompt users to add a profile
+                // alert("No profiles found. Please add a new profile to begin.");
+            }
         }
 
         function loadProfile() {
             const selectedProfile = profileSelect.value;
             if (!selectedProfile) {
                 startTestButton.disabled = true;
+                viewCorrectWordsButton.disabled = true;
+                deleteProfileButton.disabled = true;
                 return;
             }
             currentProfile = selectedProfile;
             resultProfileSpan.textContent = currentProfile;
             startTestButton.disabled = false;
+            viewCorrectWordsButton.disabled = false;
+            deleteProfileButton.disabled = false;
 
             // Save the selected profile as the last chosen
             localStorage.setItem('lastSelectedProfile', currentProfile);
@@ -1052,14 +1073,14 @@
 
         // Initialize Profiles on Page Load
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize profiles if not present
+            // Initialize profiles as empty if not present
             if (!localStorage.getItem(PROFILE_LIST_KEY)) {
-                const initialProfiles = ["Tobias", "Leia"];
+                const initialProfiles = []; // Start with no profiles
                 saveProfiles(initialProfiles);
             }
             updateProfileSelect();
 
-            // Retrieve and set the last selected profile
+            // Retrieve and set the last selected profile, if any
             const lastProfile = localStorage.getItem('lastSelectedProfile');
             if (lastProfile && getProfiles().includes(lastProfile)) {
                 profileSelect.value = lastProfile;
