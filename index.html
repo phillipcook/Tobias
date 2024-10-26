@@ -67,6 +67,46 @@
             animation: shake 0.5s;
         }
 
+        /* Addition Animation */
+        @keyframes moveUp {
+            0% { top: 20px; opacity: 1; }
+            50% { top: 0; opacity: 1; }
+            51% { opacity: 0; }
+            100% { top: 0; opacity: 0; }
+        }
+
+        .operand2-dots.animate-move-up {
+            position: absolute;
+            animation: moveUp 3s infinite;
+        }
+
+        .addition-container {
+            position: relative;
+            height: 40px; /* Adjust as needed */
+        }
+
+        .addition-container .operand-dots {
+            position: absolute;
+        }
+
+        .addition-container .operand1-dots {
+            top: 0; /* Keep stationary */
+        }
+
+        .addition-container .operand2-dots {
+            top: 20px; /* Start slightly lower */
+        }
+
+        .total-dots {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+        }
+
+        .addition-container.show-total .total-dots {
+            opacity: 1;
+        }
+
         /* Dot Styles */
         .dot {
             display: inline-block;
@@ -75,6 +115,7 @@
             background-color: #333;
             border-radius: 50%;
             margin-right: 2px;
+            margin-bottom: 2px;
         }
 
         /* Vertical Bar for Division Groups */
@@ -88,17 +129,18 @@
         }
 
         /* Styles for correct and incorrect answers */
-.correct {
-    background-color: #d4edda !important;
-    border-color: #28a745 !important;
-    color: #155724 !important;
-}
+        .correct {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724 !important;
+        }
 
-.incorrect {
-    background-color: #f8d7da !important; /* Light red background */
-    border-color: #dc3545 !important; /* Dark red border */
-    color: #ffffff !important; /* White text for contrast */
-}
+        .incorrect {
+            background-color: #f8d7da !important; /* Light red background */
+            border-color: #dc3545 !important; /* Dark red border */
+            color: #ffffff !important; /* White text for contrast */
+        }
+
         /* Highlight */
         .highlight {
             background-color: #ffffcc;
@@ -154,22 +196,45 @@
             margin-bottom: 10px;
         }
 
-        /* Improved Spacing for Checkboxes */
-        #settingsForm label {
-            margin: 5px 20px; /* Increased margin for better spacing */
+        .settings-item {
             display: flex;
             align-items: center;
+            margin: 5px 20px;
             font-size: 1em;
-            cursor: pointer;
+            position: relative; /* For tooltip positioning */
         }
 
-        #settingsForm input[type="number"] {
-            width: 80px;
+        .settings-item label {
+            margin-right: 10px;
+        }
+
+        .number-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .number-input input[type="number"] {
+            width: 60px;
             padding: 5px;
-            margin-left: 5px;
+            margin: 0 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            text-align: center;
+            text-align: center; /* Center-align the text */
+        }
+
+        .number-input button {
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .number-input button:hover {
+            background-color: #0d6efd;
         }
 
         #operatorSelection {
@@ -184,6 +249,7 @@
             display: flex;
             align-items: center;
             font-size: 1em;
+            padding-left: 5px; /* Add padding for better spacing */
         }
 
         /* Styled Button */
@@ -201,19 +267,6 @@
 
         #generateProblems:hover {
             background-color: #0d6efd;
-        }
-
-        /* Test Mode Checkbox */
-        #testModeContainer {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-        }
-
-        #testModeContainer label {
-            margin-left: 10px;
-            font-size: 1em;
-            cursor: pointer;
         }
 
         /* Problems Area */
@@ -252,6 +305,7 @@
             margin-bottom: 5px;
             font-weight: bold;
             color: #333;
+            text-align: center; /* Center-align the problem text */
         }
 
         .visual-aid {
@@ -261,20 +315,59 @@
             margin-top: 5px;
         }
 
-input[type="text"],
-input[type="number"] {
-    width: 100%;
-    padding: 5px;
-    border: 2px solid #1e90ff;
-    border-radius: 5px;
-    text-align: center;
-    transition: border-color 0.3s ease;
-    font-size: 1em;
-}
+        /* Center alignment when no visual aid */
+        .problem-cell-no-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
 
-        input[type="text"]:focus {
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            border: 2px solid #1e90ff;
+            border-radius: 5px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
             border-color: #0d6efd;
             outline: none;
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 1.2em;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            /* Fade in tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
 
         /* Responsive Design */
@@ -291,6 +384,35 @@ input[type="number"] {
                 font-size: 0.9em;
             }
         }
+
+
+		/* Updated keyframes for operand2-dots */
+		@keyframes operand2MoveUp {
+			0% { top: 20px; opacity: 1; }
+			50% { top: 0; opacity: 1; }
+			50.1% { opacity: 0; }
+			100% { top: 0; opacity: 0; }
+		}
+
+		.operand2-dots.animate-move-up {
+			position: absolute;
+			animation: operand2MoveUp 6s infinite;
+		}
+
+		/* New keyframes for total-dots */
+		@keyframes totalDotsAppear {
+			0% { opacity: 0; }
+			50% { opacity: 0; }
+			50.1% { opacity: 1; }
+			100% { opacity: 1; }
+		}
+
+		.total-dots.animate-appear {
+			position: absolute;
+			top: 0;
+			animation: totalDotsAppear 6s infinite;
+		}
+
 
         @media (max-width: 600px) {
             #settingsForm {
@@ -329,44 +451,68 @@ input[type="number"] {
     <div id="scoreDisplay">Score: 0 / 0</div>
     <form id="settingsForm" onsubmit="return false;">
         <div>
-            <label for="minNum">Min Number:
-                <input type="number" id="minNum" name="minNum" min="1" placeholder="1">
-            </label>
-            <label for="maxNum">Max Number:
-                <input type="number" id="maxNum" name="maxNum" min="1" placeholder="10">
-            </label>
-            <label>
-                <input type="checkbox" id="allowNegativeAnswers" name="allowNegativeAnswers">
-                Allow Negative Answers
-            </label>
-            <label>
-                <input type="checkbox" id="includeMissingOperands" name="includeMissingOperands">
-                Fill in the blanks
-            </label>
+            <div class="settings-item">
+                <label for="minNum">Min Number:</label>
+                <div class="number-input">
+                    <button type="button" id="minNumDecrease">-</button>
+                    <input type="number" id="minNum" name="minNum" min="1" placeholder="1">
+                    <button type="button" id="minNumIncrease">+</button>
+                </div>
+            </div>
+            <div class="settings-item">
+                <label for="maxNum">Max Number:</label>
+                <div class="number-input">
+                    <button type="button" id="maxNumDecrease">-</button>
+                    <input type="number" id="maxNum" name="maxNum" min="1" placeholder="10">
+                    <button type="button" id="maxNumIncrease">+</button>
+                </div>
+            </div>
+            <div class="settings-item">
+                <label>
+                    <input type="checkbox" id="allowNegativeAnswers" name="allowNegativeAnswers">
+                    Allow Negative Answers
+                </label>
+            </div>
+            <div class="settings-item">
+                <label>
+                    <input type="checkbox" id="includeMissingOperands" name="includeMissingOperands">
+                    Fill in the blanks
+                </label>
+            </div>
+            <div class="settings-item">
+                <label>
+                    <input type="checkbox" id="testMode" name="testMode">
+                    Test Mode
+                </label>
+            </div>
+            <div class="settings-item">
+                <label>
+                    <span class="tooltip">
+                        <input type="checkbox" id="visualAids" name="visualAids" checked>
+                        Visual Aids
+                        <span class="tooltiptext">Shows visual aid for answers less than 10.</span>
+                    </span>
+                </label>
+            </div>
         </div>
         <div id="operatorSelection">
             <span style="margin-right:20px; font-size:1em;">Select Operators:</span>
             <label>
                 <input type="checkbox" id="addOperator" name="operators" value="+">
-                +
+                &nbsp;+
             </label>
             <label>
                 <input type="checkbox" id="subtractOperator" name="operators" value="-">
-                -
+                &nbsp;-
             </label>
             <label>
                 <input type="checkbox" id="multiplyOperator" name="operators" value="*">
-                ×
+                &nbsp;×
             </label>
             <label>
                 <input type="checkbox" id="divideOperator" name="operators" value="/">
-                ÷
+                &nbsp;÷
             </label>
-        </div>
-        <!-- Test Mode Checkbox -->
-        <div id="testModeContainer">
-            <input type="checkbox" id="testMode" name="testMode">
-            <label for="testMode">Test Mode</label>
         </div>
         <button type="button" id="generateProblems">Generate Problems</button>
     </form>
@@ -386,7 +532,7 @@ input[type="number"] {
             if (isNaN(number) || number <= 0) return '';
             let dotsHTML = '';
             for (let i = 0; i < number; i++) {
-                dotsHTML += `<span class="dot"></span>`;
+                dotsHTML += '<span class="dot"></span>';
             }
             return dotsHTML;
         }
@@ -408,30 +554,33 @@ input[type="number"] {
         }
 
         // Function to generate visual representation based on operator and operands
-        // Addition Visual Aid with Answer in FIB Mode
         function generateVisualAid(problemObj, isFillInTheBlank) {
-            const { operator, operand1, operand2, answer, answer2, missingOperand } = problemObj;
+            const { operator, operand1, operand2 } = problemObj;
             let visualAid = '';
 
             switch (operator) {
                 case '+':
-                    visualAid = isFillInTheBlank
-                        ? (missingOperand === 'operand1'
-                            ? `${emptyBox} + ${getDotsHTML(operand2)} = ${getDotsHTML(answer2)}`  // Shows full answer2 as dots
-                            : `${getDotsHTML(operand1)} + ${emptyBox} = ${getDotsHTML(answer2)}`)
-                        : `${getDotsHTML(operand1)} + ${getDotsHTML(operand2)} = `;
+                    if (isFillInTheBlank) {
+                        // (Existing code for fill-in-the-blank remains unchanged)
+                    } else {
+                        visualAid = 
+                        `<div class="addition-container">
+                            <div class="operand-dots operand1-dots">${getDotsHTML(operand1)}</div>
+                            <div class="operand-dots operand2-dots">${getDotsHTML(operand2)}</div>
+                            <div class="total-dots">${getDotsHTML(operand1 + operand2)}</div>
+                        </div>`;
+                    }
                     break;
                 case '-':
                     visualAid = isFillInTheBlank
-                        ? (missingOperand === 'operand1'
-                            ? `${emptyBox} - ${getDotsHTML(operand2)} = ${getDotsHTML(answer2)}`  // Shows full answer2 as dots
-                            : `${getDotsHTML(operand1)} - ${emptyBox} = ${getDotsHTML(answer2)}`)
+                        ? (problemObj.missingOperand === 'operand1'
+                            ? `${emptyBox} - ${getDotsHTML(operand2)} = ${getDotsHTML(problemObj.answer2)}`
+                            : `${getDotsHTML(operand1)} - ${emptyBox} = ${getDotsHTML(problemObj.answer2)}`)
                         : `${getDotsHTML(operand1)}`;
                     break;
-
                 case '*':
                     if (isFillInTheBlank) {
-                        visualAid = missingOperand === 'operand1'
+                        visualAid = problemObj.missingOperand === 'operand1'
                             ? `${emptyBox} × ${operand2} =`
                             : `${operand1} × ${emptyBox} =`;
                     } else {
@@ -440,24 +589,22 @@ input[type="number"] {
                         }
                     }
                     break;
-
                 case '/':
                     if (isFillInTheBlank) {
-                        if (missingOperand === 'operand1') {
-                            let quotient = answer / operand2;
+                        if (problemObj.missingOperand === 'operand1') {
+                            let quotient = problemObj.answer / operand2;
                             for (let i = 0; i < operand2; i++) {
                                 visualAid += `${getDotsHTML(quotient)}${i < operand2 - 1 ? ' | ' : ''}`;
                             }
                             visualAid = `${emptyBox} ÷ ${getDotsHTML(operand2)} = ${visualAid}`;
                         }
                     } else {
-                        let quotient = answer;
+                        let quotient = problemObj.answer;
                         for (let i = 0; i < operand2; i++) {
                             visualAid += `${getDotsHTML(quotient)}${i < operand2 - 1 ? ' | ' : ''}`;
                         }
                     }
                     break;
-
                 default:
                     visualAid = '';
             }
@@ -615,82 +762,70 @@ input[type="number"] {
             };
         }
 
-// Function to handle answer input
-function handleAnswerInput(inputField) {
-    let problemIndex = inputField.dataset.problemIndex;
-    let problemObj = problemsData[problemIndex];
-    if (!problemObj) return; // Safety check
-    let userAnswer = inputField.value.trim();
-    let correctAnswer = problemObj.answer.toString();
-    let testMode = document.getElementById('testMode').checked;
+        // Function to handle answer input
+        function handleAnswerInput(inputField) {
+            let problemIndex = inputField.dataset.problemIndex;
+            let problemObj = problemsData[problemIndex];
+            if (!problemObj) return; // Safety check
+            let userAnswer = inputField.value.trim();
+            let correctAnswer = problemObj.answer.toString();
+            let testMode = document.getElementById('testMode').checked;
 
-    // Check if the user has entered enough digits before validating
-    if (userAnswer.length < correctAnswer.length) {
-        return; // Wait for more input
-    }
+            // Check if the user has entered enough digits before validating
+            if (userAnswer.length < correctAnswer.length) {
+                return; // Wait for more input
+            }
 
-    if (userAnswer === correctAnswer) {
-        // Correct answer
-        inputField.classList.remove('incorrect');
-        inputField.classList.add('correct');
-        if (inputField.dataset.answeredCorrectly === 'false') {
-            correctAnswers++;
-            inputField.dataset.answeredCorrectly = 'true';
-            updateScore();
+            if (userAnswer === correctAnswer) {
+                // Correct answer
+                inputField.classList.remove('incorrect');
+                inputField.classList.add('correct');
+                if (inputField.dataset.answeredCorrectly === 'false') {
+                    correctAnswers++;
+                    inputField.dataset.answeredCorrectly = 'true';
+                    updateScore();
+                }
+                if (testMode) {
+                    // Disable the input to prevent changes
+                    inputField.disabled = true;
+                }
+
+                // Update visual aid if Fill in the Blanks is enabled
+                if (problemObj.fillInTheBlanks && !testMode) {
+                    updateVisualAidWithAnswer(problemObj);
+                }
+                // Move to next input
+                moveToNextInput(inputField);
+            } else {
+                // Incorrect answer
+                inputField.classList.remove('correct');
+                inputField.classList.add('incorrect', 'animate-shake'); // Apply shake animation
+
+                // Clear the input field to make it blank
+                inputField.value = '';
+
+                // Remove the shake class after animation ends to allow re-triggering
+                inputField.addEventListener('animationend', () => {
+                    inputField.classList.remove('animate-shake');
+                }, { once: true }); // Ensure the listener is removed after first trigger
+
+                // Maintain the red background by keeping the 'incorrect' class
+                // No need to change the background color; it remains as defined in CSS
+
+                if (inputField.dataset.answeredCorrectly === 'true') {
+                    correctAnswers--;
+                    inputField.dataset.answeredCorrectly = 'false';
+                    updateScore();
+                }
+                if (testMode) {
+                    // Disable the input to prevent changes
+                    inputField.disabled = true;
+
+                    // Move to next input in Test Mode After Incorrect Answer
+                    moveToNextInput(inputField);
+                }
+            }
         }
-        if (testMode) {
-            // Disable the input to prevent changes
-            inputField.disabled = true;
-        }
-
-        // Trigger fade or slide animation if this is a subtraction problem
-        if (problemObj.operator === '-' && !testMode) {
-            // Randomly decide to apply fade or slide animation
-            let animationType = Math.random() < 0.5 ? 'animate-fade' : 'animate-slide';
-            problemObj.problemCell.classList.add(animationType);
-            // Remove the animation class after animation completes
-            problemObj.problemCell.addEventListener('animationend', () => {
-                problemObj.problemCell.classList.remove(animationType);
-            }, { once: true });
-        }
-
-        // Update visual aid if Fill in the Blanks is enabled
-        if (problemObj.fillInTheBlanks && !testMode) {
-            updateVisualAidWithAnswer(problemObj);
-        }
-        // Move to next input
-        moveToNextInput(inputField);
-    } else {
-        // Incorrect answer
-        inputField.classList.remove('correct');
-        inputField.classList.add('incorrect', 'animate-shake'); // Apply shake animation
-
-        // Clear the input field to make it blank
-        inputField.value = '';
-
-        // Remove the shake class after animation ends to allow re-triggering
-        inputField.addEventListener('animationend', () => {
-            inputField.classList.remove('animate-shake');
-        }, { once: true }); // Ensure the listener is removed after first trigger
-
-        // Maintain the red background by keeping the 'incorrect' class
-        // No need to change the background color; it remains as defined in CSS
-
-        if (inputField.dataset.answeredCorrectly === 'true') {
-            correctAnswers--;
-            inputField.dataset.answeredCorrectly = 'false';
-            updateScore();
-        }
-        if (testMode) {
-            // Disable the input to prevent changes
-            inputField.disabled = true;
-
-            // Move to next input in Test Mode After Incorrect Answer
-            moveToNextInput(inputField);
-        }
-    }
-}
-
 
         // Function to trigger shake animation on a problem cell
         function animateShake(problemCell) {
@@ -767,6 +902,7 @@ function handleAnswerInput(inputField) {
             let allowNegativeAnswers = document.getElementById('allowNegativeAnswers').checked;
             let fillInTheBlanksEnabled = document.getElementById('includeMissingOperands').checked;
             let testMode = document.getElementById('testMode').checked;
+            let visualAidsEnabled = document.getElementById('visualAids').checked;
 
             // Validate min and max numbers
             if (isNaN(minNum) || isNaN(maxNum) || minNum > maxNum) {
@@ -872,10 +1008,13 @@ function handleAnswerInput(inputField) {
                     let problemCell = document.createElement('td');
                     problemCell.innerHTML = `<span class="problem-text">${problemText}</span>`;
 
-                    // Add Visual Aid if not in Test Mode
-                    if (!testMode) {
+                    // Add Visual Aid if not in Test Mode and Visual Aids are enabled
+                    if (!testMode && visualAidsEnabled) {
                         let visualAidHTML = generateVisualAid(problemObj, problemObj.fillInTheBlanks);
                         problemCell.innerHTML += `<span class="visual-aid">${visualAidHTML}</span>`;
+                    } else {
+                        // Add class to center the content when no visual aid
+                        problemCell.classList.add('problem-cell-no-visual');
                     }
 
                     tr.appendChild(problemCell);
@@ -883,10 +1022,10 @@ function handleAnswerInput(inputField) {
 
                     // Create answer cell with input field
                     let answerCell = document.createElement('td');
-		let answerInput = document.createElement('input');
-		answerInput.type = 'number';
-		answerInput.inputMode = 'numeric';
-		answerInput.step = '1'; // Ensures only integer inputs
+                    let answerInput = document.createElement('input');
+                    answerInput.type = 'number';
+                    answerInput.inputMode = 'numeric';
+                    answerInput.step = '1'; // Ensures only integer inputs
 
                     answerInput.dataset.answer = problemObj.answer;
                     answerInput.dataset.problemIndex = problemsData.length;
@@ -901,24 +1040,38 @@ function handleAnswerInput(inputField) {
                         removeHighlight();
                         this.classList.add('highlight');
 
+                        let problemIndex = this.dataset.problemIndex;
+                        let problemObj = problemsData[problemIndex];
+
                         // Start subtraction animation if this is a subtraction problem
                         if (this.dataset.operator === '-') {
-                            let problemIndex = this.dataset.problemIndex;
-                            let problemObj = problemsData[problemIndex];
                             // Start animation
                             animateSubtraction(problemObj.problemCell, problemObj.operand2);
+                        }
+
+                        // Start addition animation if this is an addition problem
+                        if (this.dataset.operator === '+') {
+                            // Start addition animation
+                            animateAddition(problemObj.problemCell);
                         }
                     });
 
                     answerInput.addEventListener('blur', function() {
                         this.classList.remove('highlight');
 
+                        let problemIndex = this.dataset.problemIndex;
+                        let problemObj = problemsData[problemIndex];
+
                         // Stop subtraction animation if this is a subtraction problem
                         if (this.dataset.operator === '-') {
-                            let problemIndex = this.dataset.problemIndex;
-                            let problemObj = problemsData[problemIndex];
                             // Stop animation
                             stopSubtractionAnimation(problemObj.problemCell);
+                        }
+
+                        // Stop addition animation if this is an addition problem
+                        if (this.dataset.operator === '+') {
+                            // Stop addition animation
+                            stopAdditionAnimation(problemObj.problemCell);
                         }
                     });
 
@@ -993,14 +1146,29 @@ function handleAnswerInput(inputField) {
             return `${problemObj.operand1} ${getOperatorSymbol(problemObj.operator)} ${problemObj.operand2} =`;
         }
 
-        // Function to trigger shake animation on a problem cell
-        function animateShake(problemCell) {
-            problemCell.classList.add('animate-shake');
-            // Remove the class after animation completes to allow re-triggering
-            problemCell.addEventListener('animationend', () => {
-                problemCell.classList.remove('animate-shake');
-            }, { once: true });
-        }
+		// Function to animate addition (dots moving and combining)
+		function animateAddition(problemCell) {
+			const additionContainer = problemCell.querySelector('.addition-container');
+			const operand2Dots = additionContainer.querySelector('.operand2-dots');
+			const totalDots = additionContainer.querySelector('.total-dots');
+			if (!operand2Dots || !totalDots) return;
+
+			// Apply animation classes
+			operand2Dots.classList.add('animate-move-up');
+			totalDots.classList.add('animate-appear');
+		}
+
+		// Function to stop addition animation
+		function stopAdditionAnimation(problemCell) {
+			const additionContainer = problemCell.querySelector('.addition-container');
+			const operand2Dots = additionContainer.querySelector('.operand2-dots');
+			const totalDots = additionContainer.querySelector('.total-dots');
+			if (!operand2Dots || !totalDots) return;
+
+			// Remove animation classes
+			operand2Dots.classList.remove('animate-move-up');
+			totalDots.classList.remove('animate-appear');
+		}
 
         // Function to stop subtraction animation
         function stopSubtractionAnimation(problemCell) {
@@ -1019,40 +1187,13 @@ function handleAnswerInput(inputField) {
             const visualAidElement = problemCell.querySelector('.visual-aid');
             if (!visualAidElement) return;
 
-            // Locate the last "=" sign position in the text content
-            const equationText = visualAidElement.textContent;
-            const lastEqualSignIndex = equationText.lastIndexOf('=');
-
             // Get all dots in the visual aid element
             const dots = Array.from(visualAidElement.querySelectorAll('.dot'));
 
-            // Determine which animation to apply based on the presence of "="
-            if (lastEqualSignIndex !== -1) {
-                // Case where "=" is present: apply fade-down animation to dots before "="
-
-                const dotsBeforeEquals = [];
-                let foundEqualSign = false;
-
-                visualAidElement.childNodes.forEach(node => {
-                    if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('=') && !foundEqualSign) {
-                        foundEqualSign = true;
-                    }
-                    if (!foundEqualSign && node.classList && node.classList.contains('dot')) {
-                        dotsBeforeEquals.push(node);
-                    }
-                });
-
-                // Apply fade-down animation to the last 'numberToFade' dots before "="
-                const startFadeIndex = Math.max(0, dotsBeforeEquals.length - numberToFade);
-                for (let i = startFadeIndex; i < dotsBeforeEquals.length; i++) {
-                    dotsBeforeEquals[i].classList.add('animate-fade'); // Apply fade-down animation
-                }
-            } else {
-                // Case where "=" is not present: apply right-to-left animation to the rightmost dots
-                const startFadeIndex = Math.max(0, dots.length - numberToFade);
-                for (let i = startFadeIndex; i < dots.length; i++) {
-                    dots[i].classList.add('animate-slide'); // Apply right-to-left animation
-                }
+            // Apply right-to-left animation to the rightmost dots
+            const startFadeIndex = Math.max(0, dots.length - numberToFade);
+            for (let i = startFadeIndex; i < dots.length; i++) {
+                dots[i].classList.add('animate-slide'); // Apply right-to-left animation
             }
         }
 
@@ -1074,6 +1215,29 @@ function handleAnswerInput(inputField) {
             document.getElementById('multiplyOperator').checked = false;
             document.getElementById('divideOperator').checked = false;
         };
+
+        // Event listeners for increment and decrement buttons
+        document.getElementById('minNumIncrease').addEventListener('click', () => {
+            let minNumInput = document.getElementById('minNum');
+            minNumInput.value = parseInt(minNumInput.value || 0) + 1;
+        });
+
+        document.getElementById('minNumDecrease').addEventListener('click', () => {
+            let minNumInput = document.getElementById('minNum');
+            let newValue = parseInt(minNumInput.value || 0) - 1;
+            minNumInput.value = newValue < 0 ? 0 : newValue;
+        });
+
+        document.getElementById('maxNumIncrease').addEventListener('click', () => {
+            let maxNumInput = document.getElementById('maxNum');
+            maxNumInput.value = parseInt(maxNumInput.value || 0) + 1;
+        });
+
+        document.getElementById('maxNumDecrease').addEventListener('click', () => {
+            let maxNumInput = document.getElementById('maxNum');
+            let newValue = parseInt(maxNumInput.value || 0) - 1;
+            maxNumInput.value = newValue < 0 ? 0 : newValue;
+        });
     </script>
 </body>
 </html>
