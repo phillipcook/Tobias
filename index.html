@@ -20,13 +20,187 @@
             align-items: center;
             padding: 20px;
             min-height: 100vh;
-            position: relative; /* To position the Spelling button */
+            position: relative; /* To position elements absolutely */
         }
 
         h1 {
             margin-bottom: 20px;
             color: #333;
             text-align: center;
+        }
+
+        /* XP Bar */
+        #xpBarContainer {
+            width: 100%;
+            max-width: 800px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            height: 30px;
+            overflow: hidden;
+        }
+
+        #xpBar {
+            background-color: #1e90ff;
+            height: 100%;
+            width: 0;
+            transition: width 0.5s ease;
+            border-radius: 10px 0 0 10px;
+        }
+
+        #xpText {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        /* Level Display */
+        #levelDisplay {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Achievement Notification */
+        #achievementNotification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ffd700;
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        /* Achievement Modal */
+        #achievementModal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1001; /* Above other content */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+        }
+
+        #achievementModalContent {
+            background-color: #fefefe;
+            margin: 10% auto; /* 10% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        #achievementModalClose {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        #achievementModalClose:hover,
+        #achievementModalClose:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Day Checklist */
+        #dayChecklist {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 100;
+            width: 120px;
+        }
+
+        #dayChecklist h3 {
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        #dayChecklist ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #dayChecklist li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        #dayChecklist input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* End-of-Session Pop-Up */
+        #sessionSummaryModal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1001; /* Above other content */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+        }
+
+        #sessionSummaryContent {
+            background-color: #fefefe;
+            margin: 10% auto; /* 10% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            position: relative;
+            text-align: center;
+        }
+
+        #sessionSummaryContent h2 {
+            margin-bottom: 20px;
+        }
+
+        #sessionSummaryContent button {
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        #sessionSummaryContent button:hover {
+            background-color: #0d6efd;
         }
 
         /* Animations */
@@ -68,16 +242,40 @@
         }
 
         /* Addition Animation */
-        @keyframes moveUp {
+        @keyframes operand2MoveUpLoop {
             0% { top: 20px; opacity: 1; }
             50% { top: 0; opacity: 1; }
-            51% { opacity: 0; }
+            50.1% { opacity: 0; }
             100% { top: 0; opacity: 0; }
+        }
+
+        @keyframes totalDotsAppearLoop {
+            0% { opacity: 0; }
+            50% { opacity: 0; }
+            50.1% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes operand1FadeOutLoop {
+            0% { opacity: 1; }
+            50% { opacity: 1; }
+            50.1% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        .operand1-dots.animate-fade-out {
+            animation: operand1FadeOutLoop 6s infinite;
         }
 
         .operand2-dots.animate-move-up {
             position: absolute;
-            animation: moveUp 3s infinite;
+            animation: operand2MoveUpLoop 6s infinite;
+        }
+
+        .total-dots.animate-appear {
+            position: absolute;
+            top: 0;
+            animation: totalDotsAppearLoop 6s infinite;
         }
 
         .addition-container {
@@ -101,10 +299,6 @@
             opacity: 0;
             position: absolute;
             top: 0;
-        }
-
-        .addition-container.show-total .total-dots {
-            opacity: 1;
         }
 
         /* Dot Styles */
@@ -175,6 +369,13 @@
             text-align: center;
         }
 
+        #streakDisplay {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #333;
+            text-align: center;
+        }
+
         #settingsForm {
             width: 100%;
             max-width: 800px;
@@ -213,29 +414,71 @@
             align-items: center;
         }
 
-        .number-input input[type="number"] {
-            width: 60px;
-            padding: 5px;
-            margin: 0 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center; /* Center-align the text */
-        }
+		.number-input input[type="number"] {
+			width: 60px;
+			padding: 5px;
+			margin: 0 5px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			text-align: center; /* Center-align the text */
+		}
 
-        .number-input button {
-            background-color: #1e90ff;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+		/* Remove up/down arrows from number inputs */
+		input[type=number]::-webkit-outer-spin-button,
+		input[type=number]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
 
-        .number-input button:hover {
-            background-color: #0d6efd;
-        }
+		input[type=number] {
+			-moz-appearance: textfield;
+		}
+
+		.number-input button {
+			background-color: #1e90ff;
+			color: #fff;
+			border: none;
+			padding: 5px 10px;
+			font-size: 1em;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.number-input button:hover {
+			background-color: #0d6efd;
+		}
+
+		/* Styles for Quick Set Buttons */
+		.quick-set-button {
+			background-color: #1e90ff;
+			color: #fff;
+			border: none;
+			padding: 5px 10px;
+			font-size: 1em;
+			border-radius: 5px;
+			cursor: pointer;
+			margin: 0 5px;
+			transition: background-color 0.3s ease;
+		}
+
+		.quick-set-button:hover {
+			background-color: #0d6efd;
+		}
+
+		/* Container for Quick Set Buttons */
+		.quick-set-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px; /* Space between buttons */
+			margin-top: 10px;
+		}
+
+		.quick-set-button {
+			flex: 1 0 100px; /* Buttons have a minimum width of 100px */
+			text-align: center;
+		}
+
 
         #operatorSelection {
             display: flex;
@@ -253,7 +496,9 @@
         }
 
         /* Styled Button */
-        #generateProblems {
+        #generateProblems,
+        #resetProgressButton,
+        #viewAchievementsButton {
             background-color: #1e90ff;
             color: #fff;
             border: none;
@@ -263,10 +508,20 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-top: 10px;
+            margin-right: 10px;
         }
 
-        #generateProblems:hover {
+        #generateProblems:hover,
+        #viewAchievementsButton:hover {
             background-color: #0d6efd;
+        }
+
+        #resetProgressButton {
+            background-color: #dc3545;
+        }
+
+        #resetProgressButton:hover {
+            background-color: #c82333;
         }
 
         /* Problems Area */
@@ -370,6 +625,35 @@
             opacity: 1;
         }
 
+        /* Profile Selector */
+        #profileContainer {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #profileSelect {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #newProfileButton {
+            background-color: #1e90ff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #newProfileButton:hover {
+            background-color: #0d6efd;
+        }
+
         /* Responsive Design */
         @media (max-width: 800px) {
             #settingsForm {
@@ -384,35 +668,6 @@
                 font-size: 0.9em;
             }
         }
-
-
-		/* Updated keyframes for operand2-dots */
-		@keyframes operand2MoveUp {
-			0% { top: 20px; opacity: 1; }
-			50% { top: 0; opacity: 1; }
-			50.1% { opacity: 0; }
-			100% { top: 0; opacity: 0; }
-		}
-
-		.operand2-dots.animate-move-up {
-			position: absolute;
-			animation: operand2MoveUp 6s infinite;
-		}
-
-		/* New keyframes for total-dots */
-		@keyframes totalDotsAppear {
-			0% { opacity: 0; }
-			50% { opacity: 0; }
-			50.1% { opacity: 1; }
-			100% { opacity: 1; }
-		}
-
-		.total-dots.animate-appear {
-			position: absolute;
-			top: 0;
-			animation: totalDotsAppear 6s infinite;
-		}
-
 
         @media (max-width: 600px) {
             #settingsForm {
@@ -437,6 +692,14 @@
             input[type="text"] {
                 font-size: 0.8em;
             }
+
+            #dayChecklist {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 20px;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -448,7 +711,58 @@
         <button id="spellingButton">Spelling</button>
     </a>
 
+    <!-- Day Checklist -->
+    <div id="dayChecklist">
+        <h3>Weekly Goals</h3>
+        <ul>
+            <li><input type="checkbox" id="monday"> Monday</li>
+            <li><input type="checkbox" id="tuesday"> Tuesday</li>
+            <li><input type="checkbox" id="wednesday"> Wednesday</li>
+            <li><input type="checkbox" id="thursday"> Thursday</li>
+            <li><input type="checkbox" id="friday"> Friday</li>
+            <li><input type="checkbox" id="saturday"> Saturday</li>
+            <li><input type="checkbox" id="sunday"> Sunday</li>
+        </ul>
+    </div>
+
+    <!-- Profile Selector -->
+    <div id="profileContainer">
+        <select id="profileSelect"></select>
+        <button id="newProfileButton">New Profile</button>
+    </div>
+
+    <!-- Level Display -->
+    <div id="levelDisplay">Level 1</div>
+
+    <!-- XP Bar -->
+    <div id="xpBarContainer">
+        <div id="xpBar"></div>
+        <div id="xpText">0 XP / 100 XP</div>
+    </div>
+
+    <!-- Achievement Notification -->
+    <div id="achievementNotification"></div>
+
+    <!-- Achievement Modal -->
+    <div id="achievementModal">
+        <div id="achievementModalContent">
+            <span id="achievementModalClose">&times;</span>
+            <h2>Your Achievements</h2>
+            <ul id="achievementList"></ul>
+        </div>
+    </div>
+
+    <!-- End-of-Session Pop-Up -->
+    <div id="sessionSummaryModal">
+        <div id="sessionSummaryContent">
+            <h2>Session Summary</h2>
+            <p id="sessionSummaryText"></p>
+            <button id="closeSessionSummaryButton">Start New Session</button>
+        </div>
+    </div>
+
     <div id="scoreDisplay">Score: 0 / 0</div>
+    <div id="streakDisplay">Daily Streak: 0 days</div>
     <form id="settingsForm" onsubmit="return false;">
         <div>
             <div class="settings-item">
@@ -467,6 +781,25 @@
                     <button type="button" id="maxNumIncrease">+</button>
                 </div>
             </div>
+			<!-- Quick Set Buttons -->
+			<div class="settings-item">
+				<label>Quick Set:</label>
+				<div class="quick-set-container">
+					<button type="button" class="quick-set-button" data-min="1" data-max="5">1-5</button>
+					<button type="button" class="quick-set-button" data-min="2" data-max="6">2-6</button>
+					<button type="button" class="quick-set-button" data-min="3" data-max="7">3-7</button>
+					<button type="button" class="quick-set-button" data-min="5" data-max="10">5-10</button>
+					<button type="button" class="quick-set-button" data-min="10" data-max="20">10-20</button>
+					<button type="button" class="quick-set-button" data-min="15" data-max="25">15-25</button>
+					<button type="button" class="quick-set-button" data-min="20" data-max="30">20-30</button>
+					<button type="button" class="quick-set-button" data-min="25" data-max="40">25-40</button>
+					<button type="button" class="quick-set-button" data-min="30" data-max="50">30-50</button>
+					<button type="button" class="quick-set-button" data-min="50" data-max="75">50-75</button>
+					<button type="button" class="quick-set-button" data-min="75" data-max="100">75-100</button>
+					<button type="button" class="quick-set-button" data-min="100" data-max="150">100-150</button>
+				</div>
+			</div>
+			
             <div class="settings-item">
                 <label>
                     <input type="checkbox" id="allowNegativeAnswers" name="allowNegativeAnswers">
@@ -490,7 +823,7 @@
                     <span class="tooltip">
                         <input type="checkbox" id="visualAids" name="visualAids" checked>
                         Visual Aids
-                        <span class="tooltiptext">Shows visual aid for answers less than 10.</span>
+                        <span class="tooltiptext">Shows visual aids for regular problems with answers less than or equal to 10. Visual aids are not shown for fill-in-the-blank questions or test mode.</span>
                     </span>
                 </label>
             </div>
@@ -514,7 +847,11 @@
                 &nbsp;÷
             </label>
         </div>
-        <button type="button" id="generateProblems">Generate Problems</button>
+        <div>
+            <button type="button" id="generateProblems">Generate Problems</button>
+            <button type="button" id="viewAchievementsButton">View Achievements</button>
+            <button type="button" id="resetProgressButton">Reset Progress</button>
+        </div>
     </form>
     <div id="problemsArea"></div>
 
@@ -526,6 +863,26 @@
         let totalProblems = 0;
         let correctAnswers = 0;
         const emptyBox = '⬜'; // Define emptyBox as '⬜' for fill-in-the-blank
+
+		// XP and Leveling System
+		let xp = 0;
+		let level = 1;
+		let xpForNextLevel = 100;
+		let achievements = [];
+		let consecutiveCorrect = 0;
+
+		// Achievement Tracking Variables
+		let totalCorrectAnswers = 0;
+		let operationCorrectCounts = { '+': 0, '-': 0, '*': 0, '/': 0 };
+
+        // Daily Target and Streak
+        const dailyTarget = 30;
+        let dailyStreak = 0;
+        let weekCompleted = false;
+
+        // Profiles
+        let profiles = {};
+        let currentProfile = null;
 
         // Function to generate dots based on number and return HTML
         function getDotsHTML(number) {
@@ -553,10 +910,20 @@
             }
         }
 
-        // Function to generate visual representation based on operator and operands
-        function generateVisualAid(problemObj, isFillInTheBlank) {
-            const { operator, operand1, operand2 } = problemObj;
-            let visualAid = '';
+		// Function to generate visual representation based on operator and operands
+		function generateVisualAid(problemObj, isFillInTheBlank) {
+			const { operator, operand1, operand2, result } = problemObj;
+			let visualAid = '';
+
+			// Do not generate visual aids for fill-in-the-blank questions
+			if (isFillInTheBlank) {
+				return '';
+			}
+
+			// Only generate visual aids if the answer is less than or equal to 10
+			if (result > 10) {
+				return '';
+			}
 
             switch (operator) {
                 case '+':
@@ -780,11 +1147,22 @@
                 // Correct answer
                 inputField.classList.remove('incorrect');
                 inputField.classList.add('correct');
-                if (inputField.dataset.answeredCorrectly === 'false') {
-                    correctAnswers++;
-                    inputField.dataset.answeredCorrectly = 'true';
-                    updateScore();
-                }
+				if (inputField.dataset.answeredCorrectly === 'false') {
+					correctAnswers++;
+					totalCorrectAnswers++; // Increment total correct answers
+					inputField.dataset.answeredCorrectly = 'true';
+					updateScore();
+					awardXP(problemObj);
+					consecutiveCorrect++;
+					// Update operation-specific correct counts
+					let operator = problemObj.operator;
+					if (operationCorrectCounts.hasOwnProperty(operator)) {
+						operationCorrectCounts[operator]++;
+					}
+					checkAchievements();
+					checkDailyTarget();
+				}
+
                 if (testMode) {
                     // Disable the input to prevent changes
                     inputField.disabled = true;
@@ -809,13 +1187,11 @@
                     inputField.classList.remove('animate-shake');
                 }, { once: true }); // Ensure the listener is removed after first trigger
 
-                // Maintain the red background by keeping the 'incorrect' class
-                // No need to change the background color; it remains as defined in CSS
-
                 if (inputField.dataset.answeredCorrectly === 'true') {
                     correctAnswers--;
                     inputField.dataset.answeredCorrectly = 'false';
                     updateScore();
+                    consecutiveCorrect = 0;
                 }
                 if (testMode) {
                     // Disable the input to prevent changes
@@ -825,7 +1201,49 @@
                     moveToNextInput(inputField);
                 }
             }
+
+            // Check if all problems are answered
+            if (areAllProblemsAnswered()) {
+                showSessionSummary();
+            }
         }
+
+        // Function to check if all problems are answered
+        function areAllProblemsAnswered() {
+            return answerCells.every(input => input.dataset.answeredCorrectly === 'true');
+        }
+
+        // Function to show session summary
+        function showSessionSummary() {
+            let sessionSummaryText = document.getElementById('sessionSummaryText');
+            sessionSummaryText.textContent = `You answered ${correctAnswers} out of ${totalProblems} questions correctly!`;
+
+            document.getElementById('sessionSummaryModal').style.display = 'block';
+
+            // Reset the problems after showing summary
+            // We will wait until the user clicks the button to reset
+        }
+
+        // Function to reset the session
+        function resetSession() {
+            document.getElementById('sessionSummaryModal').style.display = 'none';
+            // Clear problems and data
+            let problemsArea = document.getElementById('problemsArea');
+            problemsArea.innerHTML = '';
+            answerCells = [];
+            problemCells = [];
+            problemsData = [];
+            totalProblems = 0;
+            correctAnswers = 0;
+            updateScore();
+            consecutiveCorrect = 0;
+            focusNextEmptyAnswer();
+        }
+
+        // Event listener for closing session summary
+        document.getElementById('closeSessionSummaryButton').addEventListener('click', function() {
+            resetSession();
+        });
 
         // Function to trigger shake animation on a problem cell
         function animateShake(problemCell) {
@@ -895,6 +1313,7 @@
             totalProblems = 0;
             correctAnswers = 0;
             updateScore();
+            consecutiveCorrect = 0;
 
             // Read settings
             let minNum = parseInt(document.getElementById('minNum').value);
@@ -964,10 +1383,17 @@
             // Initialize a Set to track unique problems
             const generatedProblems = new Set();
 
-            // Generate 10 rows with 3 problems each (total 30 problems)
-            for (let row = 0; row < 10; row++) {
+            // Generate enough problems to meet the daily target
+            let totalProblemCount = dailyTarget;
+            let problemsPerRow = 3;
+            let totalRows = Math.ceil(totalProblemCount / problemsPerRow);
+            let problemCounter = 0;
+
+            for (let row = 0; row < totalRows; row++) {
                 let tr = document.createElement('tr');
-                for (let col = 0; col < 3; col++) {
+                for (let col = 0; col < problemsPerRow; col++) {
+                    if (problemCounter >= totalProblemCount) break;
+
                     let problemObj;
                     let attempts = 0;
                     let maxAttempts = 10; // Increased attempts for better uniqueness
@@ -1011,7 +1437,12 @@
                     // Add Visual Aid if not in Test Mode and Visual Aids are enabled
                     if (!testMode && visualAidsEnabled) {
                         let visualAidHTML = generateVisualAid(problemObj, problemObj.fillInTheBlanks);
-                        problemCell.innerHTML += `<span class="visual-aid">${visualAidHTML}</span>`;
+                        if (visualAidHTML) {
+                            problemCell.innerHTML += `<span class="visual-aid">${visualAidHTML}</span>`;
+                        } else {
+                            // Add class to center the content when no visual aid
+                            problemCell.classList.add('problem-cell-no-visual');
+                        }
                     } else {
                         // Add class to center the content when no visual aid
                         problemCell.classList.add('problem-cell-no-visual');
@@ -1098,6 +1529,7 @@
                     problemObj.answerInput = answerInput;
                     problemsData.push(problemObj);
                     totalProblems++;
+                    problemCounter++;
                 }
                 tbody.appendChild(tr);
             }
@@ -1146,29 +1578,33 @@
             return `${problemObj.operand1} ${getOperatorSymbol(problemObj.operator)} ${problemObj.operand2} =`;
         }
 
-		// Function to animate addition (dots moving and combining)
-		function animateAddition(problemCell) {
-			const additionContainer = problemCell.querySelector('.addition-container');
-			const operand2Dots = additionContainer.querySelector('.operand2-dots');
-			const totalDots = additionContainer.querySelector('.total-dots');
-			if (!operand2Dots || !totalDots) return;
+        // Function to animate addition (dots moving and combining)
+        function animateAddition(problemCell) {
+            const additionContainer = problemCell.querySelector('.addition-container');
+            const operand1Dots = additionContainer.querySelector('.operand1-dots');
+            const operand2Dots = additionContainer.querySelector('.operand2-dots');
+            const totalDots = additionContainer.querySelector('.total-dots');
+            if (!operand1Dots || !operand2Dots || !totalDots) return;
 
-			// Apply animation classes
-			operand2Dots.classList.add('animate-move-up');
-			totalDots.classList.add('animate-appear');
-		}
+            // Apply animation classes
+            operand1Dots.classList.add('animate-fade-out');
+            operand2Dots.classList.add('animate-move-up');
+            totalDots.classList.add('animate-appear');
+        }
 
-		// Function to stop addition animation
-		function stopAdditionAnimation(problemCell) {
-			const additionContainer = problemCell.querySelector('.addition-container');
-			const operand2Dots = additionContainer.querySelector('.operand2-dots');
-			const totalDots = additionContainer.querySelector('.total-dots');
-			if (!operand2Dots || !totalDots) return;
+        // Function to stop addition animation
+        function stopAdditionAnimation(problemCell) {
+            const additionContainer = problemCell.querySelector('.addition-container');
+            const operand1Dots = additionContainer.querySelector('.operand1-dots');
+            const operand2Dots = additionContainer.querySelector('.operand2-dots');
+            const totalDots = additionContainer.querySelector('.total-dots');
+            if (!operand1Dots || !operand2Dots || !totalDots) return;
 
-			// Remove animation classes
-			operand2Dots.classList.remove('animate-move-up');
-			totalDots.classList.remove('animate-appear');
-		}
+            // Remove animation classes
+            operand1Dots.classList.remove('animate-fade-out');
+            operand2Dots.classList.remove('animate-move-up');
+            totalDots.classList.remove('animate-appear');
+        }
 
         // Function to stop subtraction animation
         function stopSubtractionAnimation(problemCell) {
@@ -1214,19 +1650,33 @@
             document.getElementById('subtractOperator').checked = false;
             document.getElementById('multiplyOperator').checked = false;
             document.getElementById('divideOperator').checked = false;
+
+            loadProfiles();
+            updateDayChecklist();
+            updateStreakDisplay();
         };
 
-        // Event listeners for increment and decrement buttons
-        document.getElementById('minNumIncrease').addEventListener('click', () => {
-            let minNumInput = document.getElementById('minNum');
-            minNumInput.value = parseInt(minNumInput.value || 0) + 1;
-        });
+		// Event listeners for increment and decrement buttons
+		document.getElementById('minNumIncrease').addEventListener('click', () => {
+			let minNumInput = document.getElementById('minNum');
+			minNumInput.value = parseInt(minNumInput.value || 0) + 1;
+		});
 
-        document.getElementById('minNumDecrease').addEventListener('click', () => {
-            let minNumInput = document.getElementById('minNum');
-            let newValue = parseInt(minNumInput.value || 0) - 1;
-            minNumInput.value = newValue < 0 ? 0 : newValue;
-        });
+		document.getElementById('minNumDecrease').addEventListener('click', () => {
+			let minNumInput = document.getElementById('minNum');
+			let newValue = parseInt(minNumInput.value || 0) - 1;
+			minNumInput.value = newValue < 0 ? 0 : newValue;
+		});
+
+		// Event listeners for Quick Set Buttons
+		document.querySelectorAll('.quick-set-button').forEach(button => {
+			button.addEventListener('click', function() {
+				let min = this.dataset.min;
+				let max = this.dataset.max;
+				document.getElementById('minNum').value = min;
+				document.getElementById('maxNum').value = max;
+			});
+		});
 
         document.getElementById('maxNumIncrease').addEventListener('click', () => {
             let maxNumInput = document.getElementById('maxNum');
@@ -1238,6 +1688,431 @@
             let newValue = parseInt(maxNumInput.value || 0) - 1;
             maxNumInput.value = newValue < 0 ? 0 : newValue;
         });
+
+        // XP and Leveling Functions
+        function awardXP(problemObj) {
+            let xpGained = 10; // Base XP
+
+            // Increase XP based on difficulty (e.g., larger numbers, complex operators)
+            let difficultyFactor = Math.max(problemObj.result, problemObj.operand1, problemObj.operand2);
+            xpGained += Math.floor(difficultyFactor / 10);
+
+            xp += xpGained;
+            updateXPBar();
+            saveProgress();
+        }
+
+        function updateXPBar() {
+            while (xp >= xpForNextLevel) {
+                xp -= xpForNextLevel;
+                level++;
+                xpForNextLevel = Math.floor(xpForNextLevel * 1.5);
+                // Optionally unlock incentives here
+            }
+            let xpBar = document.getElementById('xpBar');
+            let xpText = document.getElementById('xpText');
+            let xpPercentage = (xp / xpForNextLevel) * 100;
+            xpBar.style.width = xpPercentage + '%';
+            xpText.textContent = `${xp} XP / ${xpForNextLevel} XP`;
+
+            // Update level display
+            document.getElementById('levelDisplay').textContent = `Level ${level}`;
+        }
+
+        // Achievements Functions
+        function checkAchievements() {
+            // Example achievements
+            if (correctAnswers === 10 && !achievements.includes('First10Correct')) {
+                achievements.push('First10Correct');
+                showAchievement('Achievement Unlocked: First 10 Questions Correct!');
+            }
+
+            if (correctAnswers === 100 && !achievements.includes('First100Correct')) {
+                achievements.push('First100Correct');
+                showAchievement('Achievement Unlocked: 100 Questions Answered!');
+            }
+
+            if (consecutiveCorrect === 5 && !achievements.includes('5InARow')) {
+                achievements.push('5InARow');
+                showAchievement('Achievement Unlocked: 5 Perfect Answers in a Row!');
+            }
+
+            if (dailyStreak === 7 && !achievements.includes('PerfectWeek')) {
+                achievements.push('PerfectWeek');
+                showAchievement('Achievement Unlocked: Perfect Week!');
+            }
+
+            saveProgress();
+        }
+
+        function showAchievement(message) {
+            let notification = document.getElementById('achievementNotification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Save and Load Progress
+		function saveProgress() {
+			if (currentProfile) {
+				profiles[currentProfile] = {
+					xp: xp,
+					level: level,
+					xpForNextLevel: xpForNextLevel,
+					achievements: achievements,
+					dailyStreak: dailyStreak,
+					weekCompleted: weekCompleted,
+					dayChecklist: getDayChecklistState(),
+					totalCorrectAnswers: totalCorrectAnswers, // Add this line
+					operationCorrectCounts: operationCorrectCounts // Add this line
+				};
+				localStorage.setItem('mathGameProfiles', JSON.stringify(profiles));
+			}
+		}
+
+
+        function loadProfiles() {
+            profiles = JSON.parse(localStorage.getItem('mathGameProfiles')) || {};
+            let profileSelect = document.getElementById('profileSelect');
+            profileSelect.innerHTML = '';
+            for (let profileName in profiles) {
+                let option = document.createElement('option');
+                option.value = profileName;
+                option.textContent = profileName;
+                profileSelect.appendChild(option);
+            }
+            if (Object.keys(profiles).length === 0) {
+                createNewProfile('Default');
+            } else {
+                currentProfile = profileSelect.value;
+                loadProfileData(currentProfile);
+            }
+        }
+
+        function createNewProfile(profileName) {
+            profiles[profileName] = {
+                xp: 0,
+                level: 1,
+                xpForNextLevel: 100,
+                achievements: [],
+                dailyStreak: 0,
+                weekCompleted: false,
+                dayChecklist: {}
+            };
+            currentProfile = profileName;
+            saveProgress();
+            loadProfiles();
+        }
+
+		function loadProfileData(profileName) {
+			let profileData = profiles[profileName];
+			if (profileData) {
+				xp = profileData.xp;
+				level = profileData.level;
+				xpForNextLevel = profileData.xpForNextLevel;
+				achievements = profileData.achievements;
+				dailyStreak = profileData.dailyStreak || 0;
+				weekCompleted = profileData.weekCompleted || false;
+				setDayChecklistState(profileData.dayChecklist || {});
+				totalCorrectAnswers = profileData.totalCorrectAnswers || 0; // Add this line
+				operationCorrectCounts = profileData.operationCorrectCounts || { '+': 0, '-': 0, '*': 0, '/': 0 }; // Add this line
+				updateXPBar();
+				updateDayChecklist();
+				updateStreakDisplay();
+			}
+		}
+
+
+        document.getElementById('profileSelect').addEventListener('change', function() {
+            currentProfile = this.value;
+            loadProfileData(currentProfile);
+        });
+
+        document.getElementById('newProfileButton').addEventListener('click', function() {
+            let profileName = prompt('Enter new profile name:');
+            if (profileName && !profiles[profileName]) {
+                createNewProfile(profileName);
+            } else if (profiles[profileName]) {
+                alert('Profile name already exists.');
+            }
+        });
+
+        // Reset Progress Button
+        document.getElementById('resetProgressButton').addEventListener('click', function() {
+            let password = prompt('Enter password to reset progress:');
+            if (password === 'phillip') {
+                xp = 0;
+                level = 1;
+                xpForNextLevel = 100;
+                achievements = [];
+                consecutiveCorrect = 0;
+                dailyStreak = 0;
+                weekCompleted = false;
+                resetDayChecklist();
+                updateXPBar();
+                updateStreakDisplay();
+                saveProgress();
+                alert('Progress has been reset.');
+            } else {
+                alert('Incorrect password.');
+            }
+        });
+
+		// View Achievements Button
+		document.getElementById('viewAchievementsButton').addEventListener('click', function() {
+			let achievementList = document.getElementById('achievementList');
+			achievementList.innerHTML = '';
+			for (let key in achievementsData) {
+				let achievement = achievementsData[key];
+				let li = document.createElement('li');
+				li.textContent = achievement.title + ': ' + achievement.description;
+				if (achievements.includes(key)) {
+					li.style.color = 'green';
+				} else {
+					li.style.color = 'gray';
+				}
+				achievementList.appendChild(li);
+			}
+			document.getElementById('achievementModal').style.display = 'block';
+		});
+
+        // Close Achievement Modal
+        document.getElementById('achievementModalClose').addEventListener('click', function() {
+            document.getElementById('achievementModal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside content
+        window.addEventListener('click', function(event) {
+            let modal = document.getElementById('achievementModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+            let sessionModal = document.getElementById('sessionSummaryModal');
+            if (event.target == sessionModal) {
+                sessionModal.style.display = 'none';
+            }
+        });
+
+// Achievement Data
+const achievementsData = {
+    // General Milestones
+    'FirstSteps': {
+        title: 'Getting Started',
+        description: 'Complete your first math problem.',
+        criteria: function() { return totalCorrectAnswers >= 1; }
+    },
+    'RisingStar': {
+        title: 'Rising Star',
+        description: 'Answer 10 math problems correctly.',
+        criteria: function() { return totalCorrectAnswers >= 10; }
+    },
+    'Achiever': {
+        title: 'Achiever',
+        description: 'Successfully solve 50 math problems.',
+        criteria: function() { return totalCorrectAnswers >= 50; }
+    },
+    'Master': {
+        title: 'Master Mathematician',
+        description: 'Answer 100 math problems correctly.',
+        criteria: function() { return totalCorrectAnswers >= 100; }
+    },
+    'CenturyClub': {
+        title: 'Century Club',
+        description: 'Achieve 200 correct answers.',
+        criteria: function() { return totalCorrectAnswers >= 200; }
+    },
+    // Operation-Specific Achievements
+    // Addition
+    'AdditionNovice': {
+        title: 'Addition Novice',
+        description: 'Solve 10 addition problems correctly.',
+        criteria: function() { return operationCorrectCounts['+'] >= 10; }
+    },
+    'AdditionProdigy': {
+        title: 'Addition Prodigy',
+        description: 'Complete 50 addition problems accurately.',
+        criteria: function() { return operationCorrectCounts['+'] >= 50; }
+    },
+    'AdditionMastery': {
+        title: 'Addition Mastery',
+        description: 'Achieve 100 correct addition answers.',
+        criteria: function() { return operationCorrectCounts['+'] >= 100; }
+    },
+    // Subtraction
+    'SubtractionNovice': {
+        title: 'Subtraction Novice',
+        description: 'Solve 10 subtraction problems correctly.',
+        criteria: function() { return operationCorrectCounts['-'] >= 10; }
+    },
+    'SubtractionProdigy': {
+        title: 'Subtraction Prodigy',
+        description: 'Complete 50 subtraction problems accurately.',
+        criteria: function() { return operationCorrectCounts['-'] >= 50; }
+    },
+    'SubtractionMastery': {
+        title: 'Subtraction Mastery',
+        description: 'Achieve 100 correct subtraction answers.',
+        criteria: function() { return operationCorrectCounts['-'] >= 100; }
+    },
+    // Multiplication
+    'MultiplicationNovice': {
+        title: 'Multiplication Novice',
+        description: 'Solve 10 multiplication problems correctly.',
+        criteria: function() { return operationCorrectCounts['*'] >= 10; }
+    },
+    'MultiplicationProdigy': {
+        title: 'Multiplication Prodigy',
+        description: 'Complete 50 multiplication problems accurately.',
+        criteria: function() { return operationCorrectCounts['*'] >= 50; }
+    },
+    'MultiplicationMastery': {
+        title: 'Multiplication Mastery',
+        description: 'Achieve 100 correct multiplication answers.',
+        criteria: function() { return operationCorrectCounts['*'] >= 100; }
+    },
+    // Division
+    'DivisionNovice': {
+        title: 'Division Novice',
+        description: 'Solve 10 division problems correctly.',
+        criteria: function() { return operationCorrectCounts['/'] >= 10; }
+    },
+    'DivisionProdigy': {
+        title: 'Division Prodigy',
+        description: 'Complete 50 division problems accurately.',
+        criteria: function() { return operationCorrectCounts['/'] >= 50; }
+    },
+    'DivisionMastery': {
+        title: 'Division Mastery',
+        description: 'Achieve 100 correct division answers.',
+        criteria: function() { return operationCorrectCounts['/'] >= 100; }
+    },
+    // Add more achievements as needed
+};
+
+// Update the checkAchievements function
+function checkAchievements() {
+    for (let key in achievementsData) {
+        if (!achievements.includes(key) && achievementsData[key].criteria()) {
+            achievements.push(key);
+            showAchievement('Achievement Unlocked: ' + achievementsData[key].title);
+        }
+    }
+    saveProgress();
+}
+
+
+        // Day Checklist Functions
+        function updateDayChecklist() {
+            let today = new Date().getDay(); // 0 (Sunday) to 6 (Saturday)
+            let dayIds = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+            // Reset on Monday
+            if (today === 1 && !localStorage.getItem('weekReset')) {
+                resetDayChecklist();
+                localStorage.setItem('weekReset', 'true');
+                weekCompleted = false;
+            }
+
+            if (today !== 1) {
+                localStorage.removeItem('weekReset');
+            }
+
+            // Load checklist from profile
+            let dayChecklist = getDayChecklistState();
+            dayIds.forEach(dayId => {
+                let checkbox = document.getElementById(dayId);
+                checkbox.checked = dayChecklist[dayId] || false;
+                checkbox.disabled = true;
+            });
+        }
+
+        function getDayChecklistState() {
+            let dayIds = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            let dayChecklist = {};
+            dayIds.forEach(dayId => {
+                let checkbox = document.getElementById(dayId);
+                dayChecklist[dayId] = checkbox.checked;
+            });
+            return dayChecklist;
+        }
+
+        function setDayChecklistState(state) {
+            let dayIds = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            dayIds.forEach(dayId => {
+                let checkbox = document.getElementById(dayId);
+                checkbox.checked = state[dayId] || false;
+                checkbox.disabled = true;
+            });
+        }
+
+        function resetDayChecklist() {
+            let dayIds = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            dayIds.forEach(dayId => {
+                let checkbox = document.getElementById(dayId);
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            });
+            dailyStreak = 0;
+            updateStreakDisplay();
+            saveProgress();
+        }
+
+        function checkDailyTarget() {
+            if (correctAnswers >= dailyTarget && !isTodayChecked()) {
+                markTodayAsCompleted();
+                dailyStreak++;
+                checkWeekCompletion();
+                updateStreakDisplay();
+                saveProgress();
+                showAchievement('Daily Target Achieved!');
+                awardDailyBonusXP();
+            }
+        }
+
+        function isTodayChecked() {
+            let todayId = getTodayId();
+            let checkbox = document.getElementById(todayId);
+            return checkbox.checked;
+        }
+
+        function markTodayAsCompleted() {
+            let todayId = getTodayId();
+            let checkbox = document.getElementById(todayId);
+            checkbox.checked = true;
+            saveProgress();
+        }
+
+        function getTodayId() {
+            let today = new Date().getDay(); // 0 (Sunday) to 6 (Saturday)
+            let dayIds = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            return dayIds[today];
+        }
+
+        function updateStreakDisplay() {
+            let streakDisplay = document.getElementById('streakDisplay');
+            streakDisplay.textContent = `Daily Streak: ${dailyStreak} days`;
+        }
+
+        function checkWeekCompletion() {
+            let dayChecklist = getDayChecklistState();
+            let allDaysCompleted = Object.values(dayChecklist).every(checked => checked);
+            if (allDaysCompleted && !weekCompleted) {
+                weekCompleted = true;
+                achievements.push('PerfectWeek');
+                showAchievement('Achievement Unlocked: Perfect Week!');
+                saveProgress();
+            }
+        }
+
+        function awardDailyBonusXP() {
+            let bonusXP = 50;
+            xp += bonusXP;
+            updateXPBar();
+            saveProgress();
+            showAchievement(`Bonus XP Awarded: ${bonusXP} XP`);
+        }
     </script>
 </body>
 </html>
